@@ -6,7 +6,8 @@ DEPENDENCIES
   jenkins_job_template
     path: spec/fixtures/cookbooks/jenkins_job_template
   rbenv
-    path: ../chef-rbenv
+    git: https://github.com/bonzofenix/chef-rbenv.git
+    revision: ce9c1494346d261e0091326e963e1ffc7a5d6e92
   replace_placeholder
     path: spec/fixtures/cookbooks/replace_placeholder
   ruby_build

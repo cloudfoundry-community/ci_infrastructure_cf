@@ -1,8 +1,9 @@
-source "https://api.berkshelf.com"
+source "https://supermarket.getchef.com"
+
 
 cookbook 'jenkins'
 # cookbook 'rbenv', git: 'https://github.com/fnichol/chef-rbenv.git'
-cookbook 'rbenv', path: '/home/ubuntu/workspace/chef-rbenv'
+cookbook 'rbenv', git: 'https://github.com/bonzofenix/chef-rbenv.git' #adds some chefmatchers
 cookbook 'ruby_build'
 cookbook 'ci_infrastructure_cf', path: 'cookbooks/ci_infrastructure_cf'
 cookbook 'hostsfile'
