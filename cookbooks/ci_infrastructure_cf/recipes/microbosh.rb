@@ -3,6 +3,7 @@ conf = node[:ci_infrastructure_cf][:jobs][job_name]
 job_filename = "#{job_name}_job.xml"
 job_file_path = File.join(Chef::Config[:file_cache_path], job_filename)
 
+
 %w{libmysqlclient-dev libpq-dev}.each do |pkg|
   package pkg
 end

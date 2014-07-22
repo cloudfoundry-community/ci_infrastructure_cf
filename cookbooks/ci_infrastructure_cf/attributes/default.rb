@@ -1,5 +1,6 @@
 default[:ci_infrastructure_cf][:credentials][:infrastructure_prototypes] = 'RSA PRIVATE KEY'
-default[:spiff][:url]= 'https://github.com/cloudfoundry-incubator/spiff/releases/download/v1.0/spiff_linux_amd64.zip'
+default[:spiff][:url] = 'https://github.com/cloudfoundry-incubator/spiff/releases/download/v1.0/spiff_linux_amd64.zip'
+
 default[:ci_infrastructure_cf][:jobs].tap do |jobs|
   jobs[:microbosh].tap do |microbosh|
     microbosh[:provider][:name] = 'openstack|aws|etc'
