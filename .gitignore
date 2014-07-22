@@ -3,3 +3,5 @@ stubs
 tmp
 .vagrant
 vagrant*
+coverage
+

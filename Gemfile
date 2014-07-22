@@ -13,3 +13,5 @@ group :development, :test  do
   gem 'rspec-core'
   gem 'pry'
 end
+
+gem 'coveralls', require: false

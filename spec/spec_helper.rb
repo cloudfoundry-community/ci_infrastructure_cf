@@ -1,4 +1,5 @@
-ENV['RACK_ENV'] ||= 'test'
+require 'coveralls'
+Coveralls.wear!
 
 require 'rspec'
 require 'chefspec'
