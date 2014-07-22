@@ -76,18 +76,17 @@ describe 'ci_infrastructure_cf::dependencies' do
 
 
   describe 'when installing spiff' do
-    let(:resource) do
-      chef_run.find_resource(:remote_file, 'spiff')
-    end
-
     it 'brings the remote file' do
-      expect(chef_run).to create_remote_file('spiff')
+      expect(chef_run).to create_remote_file('spiff').with(
+        owner: 'jenkins',
+        group: 'jenkins',
+        path: "#{Chef::Config['file_cache_path']}/spiff.zip")
     end
-
 
     it 'makes it available for jenkins in the path' do
       expect(chef_run).to run_execute('unzip-spiff')
     end
+
   end
 
   %w{git unzip}.each do |pkg|
