@@ -1,0 +1,6 @@
+name  'ci_infrastructure_cf'
+depends  'jenkins', '~>2.1.0'
+depends  'rbenv'
+depends  'ruby_build'
+depends 'hostsfile'
+provides 'ci_infrastructure_cf::default'

@@ -1,0 +1,5 @@
+.env
+stubs
+tmp
+.vagrant
+vagrant*

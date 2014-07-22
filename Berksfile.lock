@@ -1,0 +1,42 @@
+DEPENDENCIES
+  ci_infrastructure_cf
+    path: cookbooks/ci_infrastructure_cf
+  hostsfile
+  jenkins
+  jenkins_job_template
+    path: spec/fixtures/cookbooks/jenkins_job_template
+  rbenv
+    path: ../chef-rbenv
+  replace_placeholder
+    path: spec/fixtures/cookbooks/replace_placeholder
+  ruby_build
+
+GRAPH
+  apt (2.4.0)
+  build-essential (2.0.4)
+  ci_infrastructure_cf (0.0.0)
+    hostsfile (>= 0.0.0)
+    jenkins (~> 2.1.0)
+    rbenv (>= 0.0.0)
+    ruby_build (>= 0.0.0)
+  hostsfile (2.4.5)
+  java (1.22.0)
+  jenkins (2.1.2)
+    apt (~> 2.0)
+    runit (~> 1.5)
+    yum (~> 3.0)
+  jenkins_job_template (0.0.0)
+    ci_infrastructure_cf (>= 0.0.0)
+  rbenv (0.7.3)
+    java (> 1.4.0)
+    ruby_build (>= 0.0.0)
+  replace_placeholder (0.0.0)
+    ci_infrastructure_cf (>= 0.0.0)
+  ruby_build (0.8.0)
+  runit (1.5.10)
+    build-essential (>= 0.0.0)
+    yum (~> 3.0)
+    yum-epel (>= 0.0.0)
+  yum (3.2.2)
+  yum-epel (0.3.6)
+    yum (~> 3.0)

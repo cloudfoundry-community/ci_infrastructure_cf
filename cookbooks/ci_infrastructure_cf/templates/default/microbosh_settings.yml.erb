@@ -1,0 +1,14 @@
+---
+provider:
+  name: <%= @provider_name %>
+  credentials:
+    openstack_username: <%= @os_auth_name %>
+    openstack_api_key: <%= @os_auth_pass %>
+    openstack_tenant: <%= @os_tenant %>
+    openstack_auth_url: <%= @os_auth_url %>
+    openstack_region: ''
+options:
+  boot_from_volume: false
+address:
+  subnet_id: <%= @address_subnet_id %>
+  ip: <%= @address_ip %>

@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+file_dir = File.expand_path(File.dirname(__FILE__))
+job_name  = "Microbosh"
+xml_raw = `java -jar #{file_dir}/jenkins-cli.jar -s http://10.231.1.131:8080 get-job #{job_name}`
+# credential_id = xml_raw.scan(/<credentialsId>(.+)<\/credentialsId>/).first.first
+# xml_raw.gsub!(credential_id, 'CREDENTIAL_ID_PLACEHOLDER')
+file_name = "#{job_name.downcase}_job.xml"
+file_path = File.join(file_dir,
+  "../cookbooks/ci_infrastructure_cf/files/default/#{file_name}")
+File.open(file_path, 'w') { |file| file.write(xml_raw) }
