@@ -1,5 +1,5 @@
 # CI_INFRASTRUCTURE_CF
-[![Build Status](https://travis-ci.org/cloudfoundry-community/ci_infrastructure_cf.png)](https://travis-ci.org/cloudfoundry-community)
+[![Build Status](https://travis-ci.org/cloudfoundry-community/ci_infrastructure_cf.svg)](https://travis-ci.org/cloudfoundry-community/ci_infrastructure_cf)
 
 This provides Jenkins with a set of jobs that lets you set up a complete cf infrastructure on openstack.
 
