@@ -1,8 +1,5 @@
-job_name = 'microbosh'
-conf = node[:ci_infrastructure_cf][:jobs][job_name]
-job_filename = "#{job_name}_job.xml"
-job_file_path = File.join(Chef::Config[:file_cache_path], job_filename)
-
+job_name = 'Microbosh'
+conf = node[:ci_infrastructure_cf][:jobs][job_name.downcase]
 
 %w{libmysqlclient-dev libpq-dev}.each do |pkg|
   package pkg
@@ -20,16 +17,7 @@ execute "chown-rbenv-dir" do
   command "chown -R jenkins:jenkins /var/lib/jenkins/.rbenv"
 end
 
-template job_file_path do
-  source 'jenkins_job.xml.erb'
-  variables({ git_url: conf[:git_url],
-              build_cmd: conf[:build_cmd] })
-end
-
-jenkins_job "Microbosh" do
-  action :create
-  config job_file_path
-end
+jenkins_ci_job(job_name)
 
 settings_dir = '/var/lib/jenkins/.microbosh'
 directory(settings_dir) do

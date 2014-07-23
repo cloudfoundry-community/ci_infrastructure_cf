@@ -3,6 +3,8 @@ DEPENDENCIES
     path: cookbooks/ci_infrastructure_cf
   hostsfile
   jenkins
+  jenkins_ci_job
+    path: spec/fixtures/cookbooks/jenkins_ci_job
   jenkins_job_template
     path: spec/fixtures/cookbooks/jenkins_job_template
   rbenv
@@ -26,6 +28,8 @@ GRAPH
     apt (~> 2.0)
     runit (~> 1.5)
     yum (~> 3.0)
+  jenkins_ci_job (0.0.0)
+    ci_infrastructure_cf (>= 0.0.0)
   jenkins_job_template (0.0.0)
     ci_infrastructure_cf (>= 0.0.0)
   rbenv (0.7.3)

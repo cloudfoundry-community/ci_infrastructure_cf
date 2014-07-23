@@ -5,4 +5,11 @@ if defined?(ChefSpec)
       :run,
       resource_name)
   end
+
+  def create_jenkins_ci_job(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(
+      :jenkins_ci_job,
+      :create,
+      resource_name)
+  end
 end

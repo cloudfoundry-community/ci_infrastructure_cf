@@ -9,6 +9,7 @@ cookbook 'ci_infrastructure_cf', path: 'cookbooks/ci_infrastructure_cf'
 cookbook 'hostsfile'
 
 group :integration do
+  cookbook 'jenkins_ci_job', path: 'spec/fixtures/cookbooks/jenkins_ci_job'
   cookbook 'jenkins_job_template', path: 'spec/fixtures/cookbooks/jenkins_job_template'
   cookbook 'replace_placeholder', path: 'spec/fixtures/cookbooks/replace_placeholder'
 end

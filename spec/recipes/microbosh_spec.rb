@@ -4,12 +4,6 @@ describe 'ci_infrastructure_cf::microbosh' do
   let(:chef_run) { ChefSpec::Runner.new.converge(described_recipe) }
 
   describe 'when creating xml file' do
-    let(:filename){ 'microbosh_job.xml' }
-    let(:config_file){ File.join(Chef::Config[:file_cache_path], filename) }
-    let(:resource) do
-      chef_run.find_resource( :template, config_file)
-    end
-
     %w{libmysqlclient-dev libpq-dev}.each do |pkg|
       it "install #{pkg} package" do
         expect(chef_run).to install_package(pkg)
@@ -19,26 +13,12 @@ describe 'ci_infrastructure_cf::microbosh' do
     it 'chowns the rbenv dir' do
       expect(chef_run).to run_execute("chown-rbenv-dir")
     end
-
-    it 'creates the file' do
-      expect(chef_run).to create_template(config_file)
-    end
-
-    pending 'assigns the correct credentials to the file' do
-      expect(resource).to notify('ruby_block[assign-credential]').to(:run)
-    end
-
   end
 
   %w{fog bundler bosh-bootstrap}.each do |gem|
     it "installs #{gem}" do
       expect(chef_run).to install_rbenv_gem(gem)
     end
-  end
-
-  it 'creates microbosh task' do
-    expect_any_instance_of(Chef::Recipe).to receive(:jenkins_job).with('Microbosh')
-    chef_run
   end
 
   describe 'creating setting tmplates' do
