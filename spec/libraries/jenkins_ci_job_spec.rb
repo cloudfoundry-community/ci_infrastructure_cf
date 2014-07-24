@@ -29,23 +29,17 @@ describe 'jenkins_ci_job::create' do
       config: job_file_path)
   end
 
-  describe 'when creating the template' do
-    it 'creates the process template' do
+  describe 'template creation' do
+    it 'creates the template' do
       expect(chef_run).to create_template(job_file_path)
     end
 
-    describe 'when params are provided' do
+    describe 'when git urls are provided' do
       let(:git_urls) do
         [
           'https://github.com/something/something.git',
           'https://github.com/something/something2.git'
         ]
-      end
-      let(:build_cmd){ "echo 'BUILD!!!'" }
-
-      it 'should include scm node' do
-        expect(chef_run).to render_file(job_file_path)
-        .with_content('</scm>')
       end
 
       it 'should includes all the git urls' do
@@ -54,26 +48,23 @@ describe 'jenkins_ci_job::create' do
           .with_content(url)
         end
       end
-
-      it 'should include the build_cmd'
     end
 
-    describe 'when params are empty' do
-      let(:git_urls){ '' }
+    describe 'when git urls are empty' do
+      let(:git_urls){ [] }
       let(:build_cmd){ '' }
 
-      it 'should not include scm node' do
-        expect(chef_run).not_to render_file(job_file_path)
-        .with_content('</scm>')
+      it 'should include NullSCM node' do
+        expect(chef_run).to render_file(job_file_path)
+          .with_content('hudson.scm.NullSCM')
       end
 
-      it 'should not include the git url' do
+      it 'should not include any scm repo' do
         expect(chef_run).not_to render_file(job_file_path)
-        .with_content('something.git')
+        .with_content('hudson.plugins.git.GitSCM')
       end
-
-      it 'should use the default build_cmd'
     end
+
     describe 'when params are nil' do
       let(:git_urls){ nil }
       let(:build_cmd){ nil }
@@ -85,7 +76,7 @@ describe 'jenkins_ci_job::create' do
 
       it 'should not include the git url' do
         expect(chef_run).not_to render_file(job_file_path)
-        .with_content('something.git')
+          .with_content('something.git')
       end
     end
   end
