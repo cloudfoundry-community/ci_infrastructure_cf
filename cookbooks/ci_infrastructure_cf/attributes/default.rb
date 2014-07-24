@@ -16,7 +16,9 @@ default[:ci_infrastructure_cf][:jobs].tap do |jobs|
     '''
   end
   jobs[:bosh].tap do |bosh|
-    bosh[:git_url] = 'https://github.com/cloudfoundry/bosh.git'
+    bosh[:git_urls] =[
+      'https://github.com/cloudfoundry/bosh.git'
+    ]
     bosh[:build_cmd] = '''
       rbenv local 1.9.3-p194
       echo &apos;DEPLOY BOSH&apos;

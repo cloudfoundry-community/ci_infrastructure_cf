@@ -46,8 +46,7 @@ class Chef
         job_file_path = ::File.join(Chef::Config[:file_cache_path], job_filename)
         template job_file_path do
           source 'jenkins_job.xml.erb'
-          variables({ git_url: conf[:git_url],
-                      build_cmd: conf[:build_cmd] })
+          variables({ jobname: job_name })
         end
         jenkins_job job_name.capitalize do
           action :create

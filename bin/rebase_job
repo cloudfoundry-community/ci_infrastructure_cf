@@ -1,11 +1,13 @@
 #!/usr/bin/env ruby
 
 file_dir = File.expand_path(File.dirname(__FILE__))
-job_name  = "Microbosh"
+job_name  = ARGV.first
 xml_raw = `java -jar #{file_dir}/jenkins-cli.jar -s http://10.231.1.131:8080 get-job #{job_name}`
 # credential_id = xml_raw.scan(/<credentialsId>(.+)<\/credentialsId>/).first.first
 # xml_raw.gsub!(credential_id, 'CREDENTIAL_ID_PLACEHOLDER')
 file_name = "#{job_name.downcase}_job.xml"
-file_path = File.join(file_dir,
-  "../cookbooks/ci_infrastructure_cf/files/default/#{file_name}")
+file_dir_path = File.join(file_dir, "../tmp") 
+Dir.mkdir(file_dir_path) unless Dir.exists?(file_dir_path)
+file_path = File.join(file_dir_path, file_name)
+puts "File created in #{file_path}"
 File.open(file_path, 'w') { |file| file.write(xml_raw) }

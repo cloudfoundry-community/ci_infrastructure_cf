@@ -1,16 +1,22 @@
+<%
+job = node['ci_infrastructure_cf']['jobs'][@jobname]
+git_urls = job['git_urls']
+%>
 <?xml version='1.0' encoding='UTF-8'?>
 <project>
   <actions/>
   <description>Microbosh</description>
   <keepDependencies>false</keepDependencies>
   <properties/>
-  <% unless @git_url.nil? || @git_url.empty? %>
+  <% unless git_urls.nil? || git_urls.empty? %>
   <scm class="hudson.plugins.git.GitSCM" plugin="git@2.2.2">
     <configVersion>2</configVersion>
     <userRemoteConfigs>
+    <% git_urls.each do |url| %>
       <hudson.plugins.git.UserRemoteConfig>
-        <url><%= @git_url %></url>
+        <url><%= url %></url>
       </hudson.plugins.git.UserRemoteConfig>
+    <% end %>
     </userRemoteConfigs>
     <branches>
       <hudson.plugins.git.BranchSpec>
@@ -32,7 +38,7 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command><%= @build_cmd %></command>
+      <command><%= job['build_cmd'] %></command>
     </hudson.tasks.Shell>
   </builders>
   <publishers/>
