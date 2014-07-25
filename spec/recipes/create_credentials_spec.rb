@@ -14,17 +14,10 @@ describe 'ci_infrastructure_cf::create_credentials' do
     end.converge(described_recipe)
   end
 
-
-
-  let(:resource) do
-    chef_run.find_resource( :jenkins_private_key_credentials,
-                           'infrastructure-prototypes')
-  end
-
-    [
-      {name: 'credential_a' , key: 'RSA a'},
-      {name: 'credential_b' , key: 'RSA b'}
-    ].each do |c|
+  [
+    { name: 'credential_a' , key: 'RSA a' },
+    { name: 'credential_b' , key: 'RSA b' }
+  ].each do |c|
     it "creates credentials for #{c.fetch(:name)}" do
       expect(chef_run).to create_jenkins_private_key_credentials(c.fetch(:name))
       .with( private_key: c.fetch(:key ) )

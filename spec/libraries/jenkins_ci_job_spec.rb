@@ -35,7 +35,8 @@ describe 'jenkins_ci_job::create' do
           {url: 'https://github.com/something/something.git',
              credential: 'something'},
           {url: 'https://github.com/something/something2.git',
-             credential: 'something2'}
+             credential: 'something2'},
+          {url: 'https://github.com/something/something3.git'}
         ]
       end
 
@@ -60,12 +61,12 @@ describe 'jenkins_ci_job::create' do
 
         it 'should include NullSCM node' do
           expect(chef_run).to render_file(job_file_path)
-          .with_content('hudson.scm.NullSCM')
+            .with_content('hudson.scm.NullSCM')
         end
 
         it 'should not include any scm repo' do
           expect(chef_run).not_to render_file(job_file_path)
-          .with_content('hudson.plugins.git.GitSCM')
+            .with_content('hudson.plugins.git.GitSCM')
         end
       end
     end

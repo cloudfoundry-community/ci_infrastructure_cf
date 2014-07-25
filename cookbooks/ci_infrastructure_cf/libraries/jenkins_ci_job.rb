@@ -53,9 +53,7 @@ class Chef
 
 
         unless conf[:scm].nil? or conf[:scm].empty?
-          puts conf[:scm].inspect
           credentials = conf[:scm].collect do |repo|
-            puts repo.inspect
             repo[:credential]
           end.flatten
 

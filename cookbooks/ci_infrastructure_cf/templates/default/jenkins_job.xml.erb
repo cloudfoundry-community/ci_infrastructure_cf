@@ -15,7 +15,7 @@ scm = job['scm']
     <% scm.each do |repo| %>
       <hudson.plugins.git.UserRemoteConfig>
         <url><%= repo.fetch(:url) %></url>
-        <% if repo.fetch(:credential) -%>
+        <% if repo[:credential] -%>
         <credentialsId><%= repo.fetch(:credential).upcase %>_CREDENTIAL_ID</credentialsId>
         <% end -%>
       </hudson.plugins.git.UserRemoteConfig>

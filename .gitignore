@@ -4,4 +4,4 @@ tmp
 .vagrant
 vagrant*
 coverage
-
+wmg
