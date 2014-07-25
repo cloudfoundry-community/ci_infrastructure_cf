@@ -1,1 +1,1 @@
-jenkins_ci_job 'Microbosh'
+jenkins_ci_job 'Dummy'

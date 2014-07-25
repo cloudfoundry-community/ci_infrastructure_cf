@@ -44,10 +44,50 @@ class Chef
         conf = node[:ci_infrastructure_cf][:jobs][job_name]
         job_filename = "#{job_name}_job.xml"
         job_file_path = ::File.join(Chef::Config[:file_cache_path], job_filename)
+
         template job_file_path do
           source 'jenkins_job.xml.erb'
           variables({ jobname: job_name })
+          mode 00666
         end
+
+
+        unless conf[:scm].nil? or conf[:scm].empty?
+          puts conf[:scm].inspect
+          credentials = conf[:scm].collect do |repo|
+            puts repo.inspect
+            repo[:credential]
+          end.flatten
+
+          jenkins_script 'get_credential_id' do
+            command <<-EOH.gsub(/^ {4}/, '')
+           import jenkins.model.*
+           import hudson.security.*
+           import org.jenkinsci.plugins.*
+           import java.nio.file.*
+           import java.nio.charset.*
+
+           def instance = Jenkins.getInstance()
+            def creds = com.cloudbees.plugins.credentials.CredentialsProvider.lookupCredentials(
+                  com.cloudbees.plugins.credentials.common.StandardUsernameCredentials.class,
+                  instance,
+                  null,
+                  null
+                  );
+            #{credentials}.each{ cn ->
+              println(creds[0].dump())
+              println(creds.dump())
+              def id = creds.find{c -> c.username == cn }.id
+              def path = Paths.get("#{job_file_path}");
+              def charset = StandardCharsets.UTF_8;
+              def content = new String(Files.readAllBytes(path), charset);
+              content = content.replaceAll(cn.toUpperCase() +"_CREDENTIAL_ID",  id );
+              Files.write(path, content.getBytes(charset));
+            }
+            EOH
+          end
+        end
+
         jenkins_job job_name.capitalize do
           action :create
           config job_file_path

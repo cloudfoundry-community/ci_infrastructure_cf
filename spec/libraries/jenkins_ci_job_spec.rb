@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe 'jenkins_ci_job::create' do
-  let(:git_urls){ nil }
+  let(:scm){ nil }
   let(:build_cmd){ nil }
-  let(:job_name){ 'Microbosh' }
+  let(:job_name){ 'Dummy' }
   let(:filename){ "#{job_name.downcase}_job.xml" }
   let(:job_file_path){ File.join(Chef::Config[:file_cache_path],
                                filename) }
@@ -13,16 +13,11 @@ describe 'jenkins_ci_job::create' do
       step_into: ['jenkins_ci_job']
     ) do |node|
       node.set[:ci_infrastructure_cf][:jobs][job_name.downcase].tap do |j|
-        j[:git_urls] = git_urls
+        j[:scm] = scm
         j[:build_cmd] = build_cmd
       end
     end.converge(described_recipe)
   end
-
-  it 'runs the resource' do
-    expect(chef_run).to create_jenkins_ci_job(job_name)
-  end
-
 
   it 'creates jenkins job' do
     expect(chef_run).to create_jenkins_job(job_name).with(
@@ -35,48 +30,43 @@ describe 'jenkins_ci_job::create' do
     end
 
     describe 'when git urls are provided' do
-      let(:git_urls) do
+      let(:scm) do
         [
-          'https://github.com/something/something.git',
-          'https://github.com/something/something2.git'
+          {url: 'https://github.com/something/something.git',
+             credential: 'something'},
+          {url: 'https://github.com/something/something2.git',
+             credential: 'something2'}
         ]
       end
 
+
       it 'should includes all the git urls' do
-        git_urls.each do |url|
+        scm.each do |repo|
           expect(chef_run).to render_file(job_file_path)
-          .with_content(url)
+            .with_content(repo.fetch(:url))
         end
       end
+
+      it 'adds credentials placeholder' do
+          expect(chef_run).to render_file(job_file_path)
+            .with_content("#{scm.first.fetch(:credential).upcase}_CREDENTIAL_ID")
+      end
     end
 
-    describe 'when git urls are empty' do
-      let(:git_urls){ [] }
-      let(:build_cmd){ '' }
+    %w( [] nil ).each do |v|
+      describe "when scm is #{v}" do
+        let(:scm){ eval(v) }
+        let(:build_cmd){ '' }
 
-      it 'should include NullSCM node' do
-        expect(chef_run).to render_file(job_file_path)
+        it 'should include NullSCM node' do
+          expect(chef_run).to render_file(job_file_path)
           .with_content('hudson.scm.NullSCM')
-      end
+        end
 
-      it 'should not include any scm repo' do
-        expect(chef_run).not_to render_file(job_file_path)
-        .with_content('hudson.plugins.git.GitSCM')
-      end
-    end
-
-    describe 'when params are nil' do
-      let(:git_urls){ nil }
-      let(:build_cmd){ nil }
-
-      it 'should not include scm node' do
-        expect(chef_run).not_to render_file(job_file_path)
-        .with_content('</scm>')
-      end
-
-      it 'should not include the git url' do
-        expect(chef_run).not_to render_file(job_file_path)
-          .with_content('something.git')
+        it 'should not include any scm repo' do
+          expect(chef_run).not_to render_file(job_file_path)
+          .with_content('hudson.plugins.git.GitSCM')
+        end
       end
     end
   end

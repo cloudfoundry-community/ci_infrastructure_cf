@@ -55,18 +55,21 @@ execute "wait-for-jenkins" do
   action :nothing
 end
 
-src_filename = "spiff.zip"
+src_filename = "spiff_#{node['spiff']['version']}.zip"
 src_filepath = "#{Chef::Config['file_cache_path']}/#{src_filename}"
 extract_path = '/usr/local/bin'
 
 remote_file 'spiff' do
+  action :create_if_missing
   source node['spiff']['url']
   path src_filepath
   owner 'jenkins'
   group 'jenkins'
   mode "0644"
+  notifies :run, 'execute[unzip-spiff]', :immediately
 end
 
 execute 'unzip-spiff' do
   command "unzip -o #{src_filepath} -d #{extract_path} "
+  action :nothing
 end
