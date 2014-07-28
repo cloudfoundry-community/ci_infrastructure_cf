@@ -37,6 +37,11 @@ class Chef
     def whyrun_supported?
       true
     end
+    def self.collect_credentials(scm)
+      scm.collect do |repo|
+        repo[:credential]
+      end.compact
+    end
 
     action(:create) do
       converge_by("Create #{new_resource}") do
@@ -44,7 +49,6 @@ class Chef
         conf = node[:ci_infrastructure_cf][:jobs][job_name]
         job_filename = "#{job_name}_job.xml"
         job_file_path = ::File.join(Chef::Config[:file_cache_path], job_filename)
-
         template job_file_path do
           source 'jenkins_job.xml.erb'
           variables({ jobname: job_name })
@@ -53,10 +57,7 @@ class Chef
 
 
         unless conf[:scm].nil? or conf[:scm].empty?
-          credentials = conf[:scm].collect do |repo|
-            repo[:credential]
-          end.flatten
-
+          credentials = self.class.collect_credentials(conf[:scm])
           jenkins_script 'get_credential_id' do
             command <<-EOH.gsub(/^ {4}/, '')
            import jenkins.model.*
