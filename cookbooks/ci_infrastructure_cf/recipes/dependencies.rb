@@ -5,6 +5,15 @@ rbenv_ruby "1.9.3-p194" do
   user 'jenkins'
 end
 
+execute 'add-recursor' do
+  command "echo \"nameserver #{node['jenkins']['recursor']}\\n$(cat /etc/resolv.conf)\" > /etc/resolv.conf"
+  not_if do
+    node['jenkins']['recursor'].nil? or
+    File.read('/etc/resolv.conf').include?(node['jenkins']['recursor'])
+  end
+  user "root"
+end
+
 ruby_block  'enable-cli' do
   block do
      path = '/etc/default/jenkins'

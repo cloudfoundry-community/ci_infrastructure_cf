@@ -153,4 +153,25 @@ describe 'ci_infrastructure_cf::dependencies' do
       expect(resource).to notify('jenkins_command[safe-restart]').to(:execute)
     end
   end
+
+  describe 'add custom dns-server recursor' do
+    describe 'when recursor was provided' do
+      let(:chef_run) do
+        ChefSpec::Runner.new do |node|
+          node.set['rbenv']['install_pkgs'] = %w{git-core grep}
+          node.set['jenkins']['recursor'] = '4.5.6.7'
+        end.converge(described_recipe)
+      end
+
+      it 'adds recursor ip to etc/resolv.conf' do
+        expect(chef_run).to run_execute('add-recursor')
+      end
+    end
+
+    describe 'when recursor was not provided' do
+      it 'does not adds recursor ip to etc/resolv.conf' do
+        expect(chef_run).not_to run_execute('add-recursor')
+      end
+    end
+  end
 end

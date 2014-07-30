@@ -67,7 +67,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
           }
         },
         hosts: {
-          '10.231.1.10' => 'wmg-sea.openstack.blueboxgrid.com'
+          '1.2.3.4' => 'example.com'
         }
       }
     }
