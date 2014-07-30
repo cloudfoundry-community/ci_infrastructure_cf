@@ -34,6 +34,7 @@ describe 'ci_infrastructure_cf::microbosh' do
           n[:provider][:auth_url] = 'custom_auth_url'
           n[:address][:subnet_id] = 'custom_subnet_id'
           n[:address][:ip] = 'custom_ip'
+          n[:recursor] = '4.5.6.7'
         end
       end.converge(described_recipe)
     end
@@ -49,7 +50,8 @@ describe 'ci_infrastructure_cf::microbosh' do
       provider_tenant: 'openstack_tenant: custom_tenant',
       provider_auth_url: 'openstack_auth_url: custom_auth_url',
       address_subnet_id: 'subnet_id: custom_subnet_id',
-      address_ip: 'ip: custom_ip'
+      address_ip: 'ip: custom_ip',
+      recursor: '4.5.6.7'
     }.each_pair do |resource, content|
       it "sets the #{resource} correctly" do
         expect(chef_run).to render_file(settings_path)

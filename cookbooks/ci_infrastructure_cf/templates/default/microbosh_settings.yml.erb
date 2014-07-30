@@ -1,14 +1,16 @@
+<% job = node['ci_infrastructure_cf']['jobs']['microbosh'] %>
 ---
 provider:
-  name: <%= @provider_name %>
+  name: <%= job[:provider][:name] %>
   credentials:
-    openstack_username: <%= @os_auth_name %>
-    openstack_api_key: <%= @os_auth_pass %>
-    openstack_tenant: <%= @os_tenant %>
-    openstack_auth_url: <%= @os_auth_url %>
+    openstack_username: <%= job[:provider][:user]%>
+    openstack_api_key: <%= job[:provider][:pass] %>
+    openstack_tenant: <%= job[:provider][:tenant] %>
+    openstack_auth_url: <%= job[:provider][:auth_url] %>
     openstack_region: ''
+recursor: <%= job['recursor'] %>
 options:
   boot_from_volume: false
 address:
-  subnet_id: <%= @address_subnet_id %>
-  ip: <%= @address_ip %>
+  subnet_id: <%= job[:address][:subnet_id] %>
+  ip: <%= job[:address][:ip] %>

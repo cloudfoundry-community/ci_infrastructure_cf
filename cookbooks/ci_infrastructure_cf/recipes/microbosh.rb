@@ -31,13 +31,4 @@ template 'microbosh-settings' do
   owner 'jenkins'
   group 'jenkins'
   mode 00640
-  variables ({
-    provider_name: conf[:provider][:name],
-    os_auth_name: conf[:provider][:user],
-    os_auth_pass: conf[:provider][:pass],
-    os_tenant: conf[:provider][:tenant],
-    os_auth_url: conf[:provider][:auth_url],
-    address_subnet_id: conf[:address][:subnet_id],
-    address_ip: conf[:address][:ip],
-  })
 end
