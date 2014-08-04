@@ -59,6 +59,15 @@ describe 'jenkins_ci_job::create' do
       expect(chef_run).to create_template(job_file_path)
     end
 
+    describe 'build_cmd' do
+      let(:build_cmd){ '"foo"'}
+
+      it 'escapes to html' do
+        expect(chef_run).to render_file(job_file_path)
+          .with_content('&quot;foo&quot')
+      end
+    end
+
     describe 'when git urls are provided' do
       let(:scm) do
         [
@@ -69,7 +78,6 @@ describe 'jenkins_ci_job::create' do
           {url: 'https://github.com/something/something3.git'}
         ]
       end
-
 
       it 'should includes all the git urls' do
         scm.each do |repo|

@@ -40,20 +40,29 @@ default[:ci_infrastructure_cf][:jobs].tap do |jobs|
     microbosh[:provider][:auth_url]= 'https://example.com:5000/v2.0/tokens'
     microbosh[:address][:subnet_id]= 'SUBNET_ID'
     microbosh[:address][:ip]= 'IP'
-    microbosh[:build_cmd] = '''
+    microbosh[:build_cmd] = """
       rbenv local 1.9.3-p194
-      echo &apos;1\n&apos; | bosh-bootstrap deploy
-    '''
+      echo '1\n' | bosh-bootstrap deploy
+    """
   end
   jobs[:bosh]= {
     scm: [
       { url: 'https://github.com/cloudfoundry/bosh.git',
         credential: 'delete_me'
     }],
-    build_cmd: '''
+    build_cmd:  """
       rbenv local 1.9.3-p194
-      echo &apos;DEPLOY BOSH&apos;
-    '''
+      bosh -n target #{node[:ci_infrastructure_cf][:jobs][:microbosh][:address][:ip]}
+      bosh login admin admin
+      bosh -n upload release $(pwd)/release/releases/bosh-93.yml --skip-if-exists
+      ~/templates/bosh/generate_manifest ~/stubs/bosh.stub.yml
+      ~/bin/set_director_uuid deployment.yml
+      ~/bin/upload_stemcell
+
+      bosh deployment deployment.yml
+      bosh -n deploy
+   """
+
   }
 end
 default[:ci_infrastructure_cf][:hosts]

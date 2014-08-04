@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+if $(bosh stemcells | egrep -q '(ubuntu.*trusty.*2657)')
+then
+  echo 'Stemcell already exists'
+else
+  rm -f bosh-stemcell-2657-openstack-kvm-ubuntu-trusty-go_agent.tgz
+  wget --timeout=10 -q https://s3.amazonaws.com/bosh-jenkins-artifacts/bosh-stemcell/openstack/bosh-stemcell-2657-openstack-kvm-ubuntu-trusty-go_agent.tgz
+  bosh -n upload stemcell bosh-stemcell-2657-openstack-kvm-ubuntu-trusty-go_agent.tgz --skip-if-exists
+fi

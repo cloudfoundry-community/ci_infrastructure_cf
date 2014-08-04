@@ -11,5 +11,5 @@ xml = ''
 Dir.chdir(File.dirname(File.expand_path(__FILE__))) do
   xml = `spiff m bosh-deployment.yml bosh-properties.yml bosh-jobs.yml bosh-infrastructure-openstack.yml bosh-networks.yml #{ARGV[0]}`
 end
-File.open('deployment.yml','w'){ |file| f.write(xml) }
+File.open('deployment.yml','w'){ |f| f.write(xml) }
 
