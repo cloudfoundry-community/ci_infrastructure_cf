@@ -82,3 +82,24 @@ execute 'unzip-spiff' do
   command "unzip -o #{src_filepath} -d #{extract_path} "
   action :nothing
 end
+
+directory "/var/lib/jenkins/stubs" do
+  owner "jenkins"
+  group "jenkins"
+  mode 00755
+  action :create
+end
+
+%w{ templates bin }.each do |folder|
+  remote_directory "/var/lib/jenkins/#{folder}" do
+    owner "jenkins"
+    group "jenkins"
+    mode 00755
+    action :create
+    files_mode 00754
+    files_owner "jenkins"
+    files_group "jenkins"
+    purge true
+    source folder
+  end
+end

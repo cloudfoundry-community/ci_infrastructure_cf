@@ -72,6 +72,7 @@ describe 'ci_infrastructure_cf::dependencies' do
       expect(chef_run.find_resource(:log,
                                     'enable-cli-msg')).to be
     end
+
   end
 
 
@@ -172,6 +173,29 @@ describe 'ci_infrastructure_cf::dependencies' do
       it 'does not adds recursor ip to etc/resolv.conf' do
         expect(chef_run).not_to run_execute('add-recursor')
       end
+    end
+  end
+
+  it 'creates stubs folder in var/lib/jenkins/' do
+    expect(chef_run).to create_directory('/var/lib/jenkins/stubs').with(
+      owner: "jenkins",
+      group: "jenkins",
+      mode: 00755
+    )
+  end
+
+  %w{ templates bin }.each do |folder|
+    it "creates and sync #{folder} for bosh releases" do
+      expect(chef_run).to create_remote_directory("/var/lib/jenkins/#{folder}").with(
+        owner: "jenkins",
+        group: "jenkins",
+        mode: 00755,
+        files_mode: 00644,
+        files_owner: "jenkins",
+        files_group: "jenkins",
+        purge: true,
+        source: folder
+      )
     end
   end
 end

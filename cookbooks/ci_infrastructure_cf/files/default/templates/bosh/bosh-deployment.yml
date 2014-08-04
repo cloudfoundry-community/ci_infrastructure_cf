@@ -1,0 +1,43 @@
+meta:
+  instance_type: m1.large
+  environment: bosh
+  releases:
+    - name: bosh
+      version: latest
+  stemcell:
+    name: bosh-openstack-kvm-ubuntu-trusty-go_agent
+    version: latest
+
+
+name: (( meta.environment ))
+
+director_uuid: (( merge || nil ))
+
+releases: (( merge || meta.releases ))
+
+networks: (( merge ))
+
+jobs: (( merge ))
+
+properties: (( merge ))
+
+compilation:
+  workers: 5
+  network: dynamic
+  reuse_compilation_vms: true
+  cloud_properties:
+    instance_type: (( meta.instance_type ))
+
+update:
+  canaries: 1
+  canary_watch_time: 3000-120000
+  update_watch_time: 3000-120000
+  max_in_flight: 4
+
+resource_pools:
+  - name: large
+    network: default
+    size: (( auto ))
+    stemcell: (( meta.stemcell ))
+    cloud_properties:
+      instance_type: (( meta.instance_type ))

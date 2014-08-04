@@ -1,0 +1,23 @@
+<% microbosh = node[:ci_infrastructure_cf][:jobs][:microbosh] %>
+<% bosh = node[:ci_infrastructure_cf][:jobs][:bosh] %>
+properties:
+  openstack:
+    auth_url: <%= microbosh[:provider][:auth_url].gsub('/tokens', '') %>
+    username: <%= microbosh[:provider][:user] %>
+    api_key: <%= microbosh[:provider][:pass] %>
+    tenant: <%= microbosh[:provider][:tenant] %>
+    default_security_groups: ["ssh", "bosh"]
+    default_key_name: firstbosh
+    private_key: /var/jenkins/.microbosh/ssh/firstbosh.pem
+
+meta:
+  recursor: <%= microbosh[:address][:ip] %>
+  networks:
+    manual:
+      static: <%= bosh['stub']['meta']['networks']['manual']['static'] %>
+      range: <%= bosh['stub']['meta']['networks']['manual']['range'] %>
+      gateway: <%= bosh['stub']['meta']['networks']['manual']['gateway'] %>
+    cloud_properties:
+      net_id: <%= microbosh[:address][:subnet_id] %>
+      security_groups: ["ssh", "bosh"]
+

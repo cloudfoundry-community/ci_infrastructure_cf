@@ -1,0 +1,11 @@
+properties:
+  openstack:
+    auth_url: (( merge ))
+    username: (( merge ))
+    api_key: (( merge ))
+    tenant: (( merge ))
+    default_security_groups: ["ssh", "bosh"]
+    default_key_name: (( merge ))
+    private_key: (( merge ))
+
+networks: (( merge ))

@@ -1,0 +1,22 @@
+  roperties:
+  openstack:
+    auth_url: https://wmg-sea.openstack.blueboxgrid.com:5001/v2.0
+    username: bosh
+    api_key: p@ssw0rd
+    tenant: staging
+    default_security_groups: ["ssh", "bosh"]
+    default_key_name: microbosh_west
+    private_key: microbosh_west.pem
+
+meta:
+  recursor: MICROBOSH_IP
+  networks:
+    manual:
+      static:
+        - 10.230.12.11 - 10.230.12.12
+      range: 10.230.12.0/23
+      gateway: 10.230.12.1
+    cloud_properties:
+      net_id: 53e020ad-bc34-4126-bf44-e0a3e2b04591 # change this manually -nova net-list
+      security_groups: ["ssh", "bosh"]
+

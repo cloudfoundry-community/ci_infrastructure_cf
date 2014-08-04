@@ -1,0 +1,22 @@
+meta:
+  networks:
+    cloud_properties:
+    manual:
+      static:
+      range:
+      gateway:
+
+networks:
+  - name: dynamic
+    type: dynamic
+    cloud_properties: (( meta.networks.cloud_properties ))
+  - name: default
+    type: manual
+    subnets:
+      - name: default_unused
+        static:
+          (( meta.networks.manual.static ))
+        cloud_properties: (( meta.networks.cloud_properties ))
+        range: (( meta.networks.manual.range ))
+        gateway: (( meta.networks.manual.gateway ))
+

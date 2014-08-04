@@ -87,6 +87,15 @@ class Chef
           end
         end
 
+
+        template 'bosh-stub' do
+          path "/var/lib/jenkins/stubs/bosh.stub.yml"
+          source 'bosh.stub.yml.erb'
+          owner 'jenkins'
+          group 'jenkins'
+          mode 00640
+        end if job_name == 'bosh'
+
         jenkins_job job_name.capitalize do
           action :create
           config job_file_path

@@ -1,1 +1,1 @@
-jenkins_ci_job 'Dummy'
+jenkins_ci_job node['job_name']

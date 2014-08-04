@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+#
+require 'yaml'
+
+if ARGV.empty?
+  puts 'Usage: ./set_director_uuid ORIGINAL_DEPLOYMENT_YAML_PATH.' 
+  exit 1
+end
+
+url, uuid = `bosh status | egrep '(URL|UUID)'`.scan(/.*:\/\/(.*):.*UUID\ *(.*)\n/m).first
+original = YAML.load(File.read(File.expand_path(ARGV[0])))
+modified = original.dup
+modified.tap do |m|
+  m['director_uuid'] = uuid
+  File.open(ARGV[0], 'w') { |file| file.write(m.to_yaml) }
+end
+puts 'UUID replaced'
+

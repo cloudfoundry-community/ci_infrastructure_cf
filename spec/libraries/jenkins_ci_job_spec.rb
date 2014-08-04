@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pry'
 
 describe 'jenkins_ci_job::create' do
   let(:scm){ nil }
@@ -8,14 +9,16 @@ describe 'jenkins_ci_job::create' do
   let(:job_file_path){ File.join(Chef::Config[:file_cache_path],
                                filename) }
   let(:bosh_job_template){ 'jenkins_job.xml' }
+
+  let(:job_attrs) do
+    { 'scm'=>scm ,
+      'build_cmd'=>build_cmd }
+  end
+
   let(:chef_run) do
-    ChefSpec::Runner.new(
-      step_into: ['jenkins_ci_job']
-    ) do |node|
-      node.set[:ci_infrastructure_cf][:jobs][job_name.downcase].tap do |j|
-        j[:scm] = scm
-        j[:build_cmd] = build_cmd
-      end
+    ChefSpec::Runner.new(step_into: ['jenkins_ci_job']) do |n|
+      n.set['ci_infrastructure_cf'][ 'jobs'][job_name.downcase]=job_attrs
+      n.set['job_name'] = job_name
     end.converge(described_recipe)
   end
 
@@ -24,6 +27,33 @@ describe 'jenkins_ci_job::create' do
       config: job_file_path)
   end
 
+  describe 'stub creation for bosh' do
+    let(:job_name){ 'Bosh' }
+
+    describe 'when stub is provided via attributes' do
+      let(:job_attrs) do
+        {stub: {
+          meta: {
+            networks: {
+              manual: {
+                static: [ '10.10.10.10 - 11.11.11.11' ],
+                range: '10.0.0.0/8',
+                gateway: '10.0.0.1'
+              }
+            }
+          }
+        }}
+      end
+
+      it 'renders stub' do
+        expect(chef_run).to render_file('/var/lib/jenkins/stubs/bosh.stub.yml')
+          .with_content(File.read('spec/assets/bosh.stub.yml'))
+      end
+    end
+
+    describe 'when stub is not provided via attributes' do
+    end
+  end
   describe 'template creation' do
     it 'creates the template' do
       expect(chef_run).to create_template(job_file_path)

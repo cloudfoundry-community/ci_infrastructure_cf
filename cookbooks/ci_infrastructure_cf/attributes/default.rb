@@ -59,3 +59,5 @@ end
 default[:ci_infrastructure_cf][:hosts]
 default[:rbenv][:user_installs] = [{ user: 'jenkins'}]
 default['rbenv']['user_home_root'] = '/var/lib/'
+
+

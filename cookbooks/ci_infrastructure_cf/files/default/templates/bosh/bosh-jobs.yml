@@ -1,0 +1,21 @@
+jobs:
+  - name: core
+    template:
+    - powerdns
+    - nats
+    - postgres
+    - redis
+    - director
+    - blobstore
+    - registry
+    - health_monitor
+    instances: 1
+    resource_pool: large
+    persistent_disk: 50000
+    networks:
+      - name: default
+        default: [dns, gateway]
+        static_ips:
+          (( static_ips(0) ))
+
+networks: (( merge ))
