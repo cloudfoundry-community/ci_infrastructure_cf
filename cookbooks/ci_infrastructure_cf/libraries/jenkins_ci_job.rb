@@ -1,3 +1,4 @@
+require_relative 'job_conf'
 
 class Chef
   class Resource::JenkinsCiJob < Resource::LWRPBase
@@ -37,27 +38,25 @@ class Chef
     def whyrun_supported?
       true
     end
-    def self.collect_credentials(scm)
-      scm.collect do |repo|
-        repo[:credential]
-      end.compact
+
+    def job_conf
+      @job_conf ||= JobConf.new(new_resource.name, node)
+    end
+
+    def job_file_path
+      ::File.join(Chef::Config[:file_cache_path], job_conf.filename)
     end
 
     action(:create) do
       converge_by("Create #{new_resource}") do
-        job_name = new_resource.name.downcase
-        conf = node[:ci_infrastructure_cf][:jobs][job_name]
-        job_filename = "#{job_name}_job.xml"
-        job_file_path = ::File.join(Chef::Config[:file_cache_path], job_filename)
         template job_file_path do
           source 'jenkins_job.xml.erb'
-          variables({ jobname: job_name })
+          variables({ jobname: job_conf.name })
           mode 00666
         end
 
 
-        unless conf[:scm].nil? or conf[:scm].empty?
-          credentials = self.class.collect_credentials(conf[:scm])
+        if job_conf.has_scm?
           jenkins_script 'get_credential_id' do
             command <<-EOH.gsub(/^ {4}/, '')
            import jenkins.model.*
@@ -73,7 +72,7 @@ class Chef
                   null,
                   null
                   );
-            #{credentials}.each{ cn ->
+            #{job_conf.credentials}.each{ cn ->
               println(creds[0].dump())
               println(creds.dump())
               def id = creds.find{c -> c.username == cn }.id
@@ -94,9 +93,9 @@ class Chef
           owner 'jenkins'
           group 'jenkins'
           mode 00640
-        end if job_name == 'bosh'
+        end if job_conf.name== 'bosh'
 
-        jenkins_job job_name.capitalize do
+        jenkins_job job_conf.name.capitalize do
           action :create
           config job_file_path
         end

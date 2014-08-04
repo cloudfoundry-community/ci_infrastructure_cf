@@ -190,7 +190,7 @@ describe 'ci_infrastructure_cf::dependencies' do
         owner: "jenkins",
         group: "jenkins",
         mode: 00755,
-        files_mode: 00644,
+        files_mode: 00754,
         files_owner: "jenkins",
         files_group: "jenkins",
         purge: true,
