@@ -41,7 +41,7 @@ scm = job['scm']
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command><%= CGI::escapeHTML(job['build_cmd']) %></command>
+      <command><%= CGI::escapeHTML(job['build_cmd'] || '') %></command>
     </hudson.tasks.Shell>
   </builders>
   <publishers/>
