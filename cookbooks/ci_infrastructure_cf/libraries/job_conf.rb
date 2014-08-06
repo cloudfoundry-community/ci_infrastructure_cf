@@ -1,7 +1,7 @@
 require 'ostruct'
 
 class JobConf < OpenStruct
-  attr_reader :name, :filename
+  attr_reader :name, :filename, :spiff_stub
 
   def initialize(job_name, node)
     @name = job_name.downcase
@@ -17,5 +17,8 @@ class JobConf < OpenStruct
     scm.collect do |repo|
       repo['credential']
     end.compact
+  end
+  def spiff_stub
+    return super || {}
   end
 end

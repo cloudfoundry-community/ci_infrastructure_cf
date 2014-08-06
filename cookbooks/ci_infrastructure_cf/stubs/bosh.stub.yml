@@ -1,0 +1,21 @@
+properties:
+  openstack:
+    auth_url:
+    username:
+    api_key:
+    tenant:
+    default_security_groups: ["ssh", "bosh"]
+    default_key_name: firstbosh
+    private_key: /var/jenkins/.microbosh/ssh/firstbosh.pem
+
+meta:
+  recursor:
+  networks:
+    manual:
+      static: []
+      range:
+      gateway:
+    cloud_properties:
+      net_id:
+      security_groups: ["ssh", "bosh"]
+

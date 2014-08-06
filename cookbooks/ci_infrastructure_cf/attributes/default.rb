@@ -1,3 +1,4 @@
+
 default[:ci_infrastructure_cf][:credentials] = [{
   name: 'delete_me',
   key: '''-----BEGIN RSA PRIVATE KEY-----
@@ -31,39 +32,60 @@ aS5HF5rDvGixW68knwKimOgKvNrk/BQyR2vNlONeRySn2PFxf/V+4WT43mBGO8Y1
 default[:spiff][:url] = 'https://github.com/cloudfoundry-incubator/spiff/releases/download/v1.0/spiff_linux_amd64.zip'
 default[:spiff][:version] = '1.0'
 
-default[:ci_infrastructure_cf][:jobs].tap do |jobs|
-  jobs[:microbosh].tap do |microbosh|
-    microbosh[:provider][:name] = 'openstack|aws|etc'
-    microbosh[:provider][:user] = 'admin'
-    microbosh[:provider][:pass] = 'admin'
-    microbosh[:provider][:tenant] = 'dev'
-    microbosh[:provider][:auth_url]= 'https://example.com:5000/v2.0/tokens'
-    microbosh[:address][:subnet_id]= 'SUBNET_ID'
-    microbosh[:address][:ip]= 'IP'
-    microbosh[:build_cmd] = """
+default[:ci_infrastructure_cf][:jobs][:microbosh].tap do |j|
+    j[:provider][:name] = 'openstack|aws|etc'
+    j[:provider][:user] = 'admin'
+    j[:provider][:pass] = 'admin'
+    j[:provider][:tenant] = 'dev'
+    j[:provider][:auth_url]= 'https://example.com:5000/v2.0/tokens'
+    j[:address][:subnet_id]= 'SUBNET_ID'
+    j[:address][:ip]= 'IP'
+    j[:build_cmd] = """
       rbenv local 1.9.3-p194
       echo '1\n' | bosh-bootstrap deploy
     """
-  end
-  jobs[:bosh]= {
-    scm: [
+end
+
+microbosh = node[:ci_infrastructure_cf][:jobs][:microbosh]
+bosh = node[:ci_infrastructure_cf][:jobs][:bosh]
+
+default[:ci_infrastructure_cf][:jobs][:bosh].tap do |j|
+  j[:scm]= [
       { url: 'https://github.com/cloudfoundry/bosh.git',
         credential: 'delete_me'
-    }],
-    build_cmd:  """
-      rbenv local 1.9.3-p194
-      bosh -n target #{node[:ci_infrastructure_cf][:jobs][:microbosh][:address][:ip]}
-      bosh login admin admin
-      bosh -n upload release $(pwd)/release/releases/bosh-93.yml --skip-if-exists
-      ~/templates/bosh/generate_manifest ~/stubs/bosh.stub.yml
-      ~/bin/set_director_uuid deployment.yml
-      ~/bin/upload_stemcell
+  }]
+  j[:spiff_stub]=
+    Mash.new(bosh.nil? ? {} : bosh[:spiff_stub].to_hash).deep_merge( {
+    properties: {
+      openstack: {
+        auth_url: microbosh[:provider][:auth_url].gsub('/tokens',''),
+        username: microbosh[:provider][:user],
+        api_key: microbosh[:provider][:pass],
+        tenant: microbosh[:provider][:tenant],
+      }
+    },
+    meta: {
+      recursor: microbosh[:address][:ip],
+      networks: {
+        cloud_properties: {
+          net_id: microbosh[:address][:subnet_id]
+        }
+      }
+    }
+  })
 
-      bosh deployment deployment.yml
-      bosh -n deploy
-   """
+  j[:build_cmd]=  """
+    rbenv local 1.9.3-p194
+    bosh -n target #{microbosh[:address][:ip]}
+    bosh login admin admin
+    bosh -n upload release $(pwd)/release/releases/bosh-93.yml --skip-if-exists
+    ~/templates/bosh/generate_manifest ~/stubs/bosh.stub.yml
+    ~/bin/set_director_uuid deployment.yml
+    ~/bin/upload_stemcell
 
-  }
+    bosh deployment deployment.yml
+    bosh -n deploy
+ """
 end
 default[:ci_infrastructure_cf][:hosts]
 default[:rbenv][:user_installs] = [{ user: 'jenkins'}]

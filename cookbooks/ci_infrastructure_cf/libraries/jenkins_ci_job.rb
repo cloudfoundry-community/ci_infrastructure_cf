@@ -1,4 +1,13 @@
 require_relative 'job_conf'
+require 'deep_merge'
+require 'pry'
+
+# class ::Hash
+  # def deep_merge(second)
+    # merger = proc { |key, v1, v2| Hash === v1 && Hash === v2 ? v1.merge(v2, &merger) : v2 }
+    # self.merge(second, &merger)
+  # end
+# end
 
 class Chef
   class Resource::JenkinsCiJob < Resource::LWRPBase
@@ -86,14 +95,15 @@ class Chef
           end
         end
 
-
-        template 'bosh-stub' do
-          path "/var/lib/jenkins/stubs/bosh.stub.yml"
-          source 'bosh.stub.yml.erb'
-          owner 'jenkins'
-          group 'jenkins'
-          mode 00640
-        end if job_conf.name== 'bosh'
+        # Deep merge of spiff_stub provided via vagrantfile with default spiff_stub
+        original = ::YAML.load(::File.read('cookbooks/ci_infrastructure_cf/stubs/bosh.stub.yml'))
+        #Ugly workaround it make it mutable
+        merged =
+          job_conf.spiff_stub.to_hash.deep_merge( original)
+          # ::JSON.parse(job_conf.spiff_stub.to_json),
+        file '/var/lib/jenkins/stubs/bosh.stub.yml' do
+          content merged.to_yaml
+        end
 
         jenkins_job job_conf.name.capitalize do
           action :create

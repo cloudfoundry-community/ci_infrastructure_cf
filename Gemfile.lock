@@ -66,6 +66,7 @@ GEM
       simplecov (>= 0.7)
       term-ansicolor
       thor
+    deep_merge (1.0.1)
     dep-selector-libgecode (1.0.2)
     dep_selector (1.0.3)
       dep-selector-libgecode (~> 1.0)
@@ -191,6 +192,7 @@ DEPENDENCIES
   bundler
   chefspec (~> 4.0.1)
   coveralls
+  deep_merge
   dotenv
   pry
   rake

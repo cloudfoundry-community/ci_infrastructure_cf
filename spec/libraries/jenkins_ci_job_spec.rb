@@ -27,12 +27,12 @@ describe 'jenkins_ci_job::create' do
       config: job_file_path)
   end
 
-  describe 'stub creation for bosh' do
+  describe 'spiff_stub creation' do
     let(:job_name){ 'Bosh' }
 
-    describe 'when stub is provided via attributes' do
+    describe 'when spiff_stub is provided via attributes' do
       let(:job_attrs) do
-        {stub: {
+        {spiff_stub: {
           meta: {
             networks: {
               manual: {
@@ -45,15 +45,17 @@ describe 'jenkins_ci_job::create' do
         }}
       end
 
-      it 'renders stub' do
+      it 'renders default spiff_stub' do
+        expect(chef_run).to render_file('/var/lib/jenkins/stubs/bosh.stub.yml')
+      end
+
+      it 'merges stub provided via vagrantfile' do
         expect(chef_run).to render_file('/var/lib/jenkins/stubs/bosh.stub.yml')
           .with_content(File.read('spec/assets/bosh.stub.yml'))
       end
     end
-
-    describe 'when stub is not provided via attributes' do
-    end
   end
+
   describe 'template creation' do
     it 'creates the template' do
       expect(chef_run).to create_template(job_file_path)
