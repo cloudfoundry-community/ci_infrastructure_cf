@@ -1,13 +1,11 @@
 require_relative 'job_conf'
+begin
+  gem 'deep_merge'
+rescue LoadError
+  system("gem install --no-rdoc --no-ri deep_merge")
+  Gem.clear_paths
+end
 require 'deep_merge'
-require 'pry'
-
-# class ::Hash
-  # def deep_merge(second)
-    # merger = proc { |key, v1, v2| Hash === v1 && Hash === v2 ? v1.merge(v2, &merger) : v2 }
-    # self.merge(second, &merger)
-  # end
-# end
 
 class Chef
   class Resource::JenkinsCiJob < Resource::LWRPBase
@@ -96,11 +94,8 @@ class Chef
         end
 
         # Deep merge of spiff_stub provided via vagrantfile with default spiff_stub
-        original = ::YAML.load(::File.read('cookbooks/ci_infrastructure_cf/stubs/bosh.stub.yml'))
-        #Ugly workaround it make it mutable
-        merged =
-          job_conf.spiff_stub.to_hash.deep_merge( original)
-          # ::JSON.parse(job_conf.spiff_stub.to_json),
+        original = ::YAML.load(::File.read("#{Chef::Config[:cookbook_path].first}/ci_infrastructure_cf/stubs/bosh.stub.yml"))
+        merged = job_conf.spiff_stub.to_hash.deep_merge( original)
         file '/var/lib/jenkins/stubs/bosh.stub.yml' do
           content merged.to_yaml
         end
