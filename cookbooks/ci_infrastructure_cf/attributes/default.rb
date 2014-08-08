@@ -47,7 +47,6 @@ default[:ci_infrastructure_cf][:jobs][:microbosh].tap do |j|
 end
 
 microbosh = node[:ci_infrastructure_cf][:jobs][:microbosh]
-bosh = node[:ci_infrastructure_cf][:jobs][:bosh]
 
 default[:ci_infrastructure_cf][:jobs][:bosh].tap do |j|
   j[:scm]= [
@@ -55,7 +54,7 @@ default[:ci_infrastructure_cf][:jobs][:bosh].tap do |j|
         credential: 'delete_me'
   }]
   j[:spiff_stub]=
-    Mash.new(bosh.nil? ? {} : bosh[:spiff_stub].to_hash).deep_merge( {
+    JobConf.new('bosh', node).spiff_stub.to_hash.deep_merge( {
     properties: {
       openstack: {
         auth_url: microbosh[:provider][:auth_url].gsub('/tokens',''),
@@ -72,7 +71,7 @@ default[:ci_infrastructure_cf][:jobs][:bosh].tap do |j|
         }
       }
     }
-  })
+  }, {merge_hash_arrays: true })
 
   j[:build_cmd]=  """
     rbenv local 1.9.3-p194
@@ -87,6 +86,45 @@ default[:ci_infrastructure_cf][:jobs][:bosh].tap do |j|
     bosh -n deploy
  """
 end
+bosh = node[:ci_infrastructure_cf][:jobs][:bosh]
+default[:ci_infrastructure_cf][:jobs][:cloudfoundry].tap do |j|
+  j[:scm]= [
+      { url: 'https://github.com/cloudfoundry/cf-release.git' }
+  ]
+  j[:spiff_stub]=
+    JobConf.new('cloudfoundry', node).spiff_stub.to_hash.deep_merge( {
+    meta:{
+      'bosh-network'=>{
+        cidr: bosh[:spiff_stub][:meta][:networks][:manual][:range]
+      }
+    },
+    networks:
+      {floating:{
+          cloud_properties: {
+            net_id: microbosh[:address][:subnet_id],
+          }
+        },
+
+      cf1: {
+        subnets: {
+          default_unused: {
+            range: bosh[:spiff_stub][:meta][:networks][:manual][:range],
+            cloud_properties: {
+              net_id: microbosh[:address][:subnet_id]
+            }
+          }
+        }
+      },
+      'cf-dynamic' => {
+        cloud_properties: {
+          net_id: microbosh[:address][:subnet_id],
+          range: '10.0.0.0/8'
+        }
+      }
+    },
+  })
+end
+
 default[:ci_infrastructure_cf][:hosts]
 default[:rbenv][:user_installs] = [{ user: 'jenkins'}]
 default['rbenv']['user_home_root'] = '/var/lib/'

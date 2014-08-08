@@ -1,0 +1,144 @@
+---
+meta:
+  bosh-network:
+    cidr: 10.0.0.0/8
+  floating_static_ips:
+  - 1.2.3.4
+  openstack:
+  stemcell:
+    name: bosh-openstack-kvm-ubuntu-lucid
+    version: latest
+  environment: cf
+jobs:
+  ha_proxy_z1:
+    instances: 1
+    networks:
+      cf1:
+        default:
+        - dns
+        - gateway
+    properties:
+      ha_proxy:
+        ssl_pem: ! 'KEY
+
+          CERTIFICATE'
+  etcd_z1:
+    instances: 1
+  login_z2:
+    instances: 0
+networks:
+  floating:
+    cloud_properties:
+      net_id: MICROBOSH_SUBNET_ID
+      type: vip
+  cf1:
+    subnets:
+      default_unused:
+        range: 10.0.0.0/8
+        gateway: 1.1.1.1
+        reserved:
+          - 1.1.1.1 - 2.2.2.2
+        static:
+          - 2.2.2.2 - 3.3.3.3
+        cloud_properties:
+          net_id: MICROBOSH_SUBNET_ID
+          security_groups:
+          - cf-public
+          - cf-private
+          - ssh
+  cf-dynamic:
+    cloud_properties:
+      net_id: MICROBOSH_SUBNET_ID
+      security_groups:
+      - cf-public
+      - cf-private
+      - ssh
+      range: 10.0.0.0/8
+      type: dynamic
+  cf2:
+    type: manual
+    subnets:
+      default_unused:
+        range: 10.0.0.0/23
+        gateway: 10.0.0.1
+        reserved: []
+        static:
+        - 10.0.0.1 - 10.0.0.250
+        cloud_properties:
+          net_id: MICROBOSH_SUBNET_ID
+          security_groups:
+          - cf-public
+          - cf-private
+          - ssh
+properties:
+  login:
+    protocol: http
+  ssl:
+    skip_cert_verify: true
+  domain: ((  meta.floating_static_ips.[0] "xip.io" ))
+  loggregator_endpoint:
+    shared_secret: 1p@ss4cf
+  cc:
+    bulk_api_password: 1p@ss4cf
+    db_encryption_key: 1p@ss4cf
+    staging_upload_password: upload-password
+    staging_upload_user: upload-user
+  databases:
+    roles:
+    - name: ccadmin
+      password: ccadmin
+      tag: admin
+    - name: uaaadmin
+      password: uaaadmin
+      tag: admin
+  ccdb:
+    roles:
+    - name: ccadmin
+      password: ccadmin
+  uaadb:
+    roles:
+    - name: uaaadmin
+      password: uaaadmin
+  uaa:
+    admin:
+      client_secret: 1p@ss4cf
+    batch:
+      password: 1p@ss4cf
+      username: batch
+    cc:
+      client_secret: 1p@ss4cf
+    clients:
+      app-direct:
+        secret: 1p@ss4cf
+      developer_console:
+        secret: 1p@ss4cf
+      login:
+        secret: 1p@ss4cf
+      servicesmgmt:
+        secret: 1p@ss4cf
+      space-mail:
+        secret: 1p@ss4cf
+      support-services:
+        secret: 1p@ss4cf
+    jwt:
+      signing_key: ! 'KEY
+
+        KEY'
+      verification_key: ! 'KEY
+
+        KEY'
+    scim:
+      userids_enabled: false
+      users:
+      - admin|admin|scim.write,scim.read,openid,cloud_controller.admin,uaa.admin,password.write
+      - services|1p@ss4cf|scim.write,scim.read,openid,cloud_controller.admin
+  nats:
+    password: nats
+    user: nats
+  dea_next:
+    disk_mb: 10000
+    memory_mb: 1024
+  router:
+    status:
+      password: router
+      user: router

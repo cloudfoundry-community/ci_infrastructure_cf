@@ -36,7 +36,6 @@ class Chef
         r.name(new_resource.name)
         r.source(new_resource.source)
       end
-
     end
 
     #
@@ -54,6 +53,18 @@ class Chef
       ::File.join(Chef::Config[:file_cache_path], job_conf.filename)
     end
 
+    def default_stub
+      file_path= "#{Chef::Config[:cookbook_path].first}/ci_infrastructure_cf/stubs/#{job_conf.name}.stub.yml"
+      file_content = if ::File.file?(file_path)
+                       ::File.read(file_path)
+                     else
+                       '{}'
+                     end
+      ::YAML.load(file_content)
+    end
+    def stub_content
+       job_conf.spiff_stub.to_hash.deep_merge(default_stub).to_yaml
+    end
     action(:create) do
       converge_by("Create #{new_resource}") do
         template job_file_path do
@@ -94,10 +105,8 @@ class Chef
         end
 
         # Deep merge of spiff_stub provided via vagrantfile with default spiff_stub
-        original = ::YAML.load(::File.read("#{Chef::Config[:cookbook_path].first}/ci_infrastructure_cf/stubs/bosh.stub.yml"))
-        merged = job_conf.spiff_stub.to_hash.deep_merge( original)
-        file '/var/lib/jenkins/stubs/bosh.stub.yml' do
-          content merged.to_yaml
+        file "/var/lib/jenkins/stubs/#{job_conf.name}.stub.yml" do
+          content stub_content
         end
 
         jenkins_job job_conf.name.capitalize do

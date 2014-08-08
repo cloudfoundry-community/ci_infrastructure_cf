@@ -1,17 +1,17 @@
 ---
 meta:
+  recursor: IP
   networks:
-    manual:
-      static:
-      - 10.10.10.10 - 11.11.11.11
-      range: 10.0.0.0/8
-      gateway: 10.0.0.1
     cloud_properties:
       net_id: SUBNET_ID
       security_groups:
       - ssh
       - bosh
-  recursor: IP
+    manual:
+      static:
+      - 10.10.10.10 - 11.11.11.11
+      range: 10.0.0.0/8
+      gateway: 10.0.0.1
 properties:
   openstack:
     auth_url: https://example.com:5000/v2.0
