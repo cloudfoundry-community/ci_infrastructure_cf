@@ -36,8 +36,14 @@ describe 'ci_infrastructure_cf::bosh' do
     end
 
     it 'merges stub provided via vagrantfile' do
-      expect(chef_run).to render_file('/var/lib/jenkins/stubs/bosh.stub.yml')
-      .with_content(File.read('spec/assets/bosh.stub.yml'))
+      resource = chef_run.find_resource(:file, '/var/lib/jenkins/stubs/bosh.stub.yml')
+      @actual_content = ChefSpec::Renderer.new(chef_run, resource).content
+      @expected_content = File.read('spec/assets/bosh.stub.yml')
+
+      actual = YAML.load(@actual_content).sort_by_key(true).to_a
+      expected = YAML.load(@expected_content).sort_by_key(true).to_a
+
+      expect(expected).to eq(actual)
     end
   end
 end

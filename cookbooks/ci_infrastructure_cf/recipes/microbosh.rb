@@ -1,3 +1,5 @@
+node.include_attribute 'ci_infrastructure_cf::microbosh'
+
 job_name = 'Microbosh'
 conf = node[:ci_infrastructure_cf][:jobs][job_name.downcase]
 
