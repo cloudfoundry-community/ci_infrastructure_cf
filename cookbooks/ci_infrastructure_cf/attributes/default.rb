@@ -1,3 +1,4 @@
+default[:jenkins][:master][:install_method]= 'package'
 
 default[:ci_infrastructure_cf][:credentials] = [{
   name: 'delete_me',
@@ -31,7 +32,6 @@ aS5HF5rDvGixW68knwKimOgKvNrk/BQyR2vNlONeRySn2PFxf/V+4WT43mBGO8Y1
 }]
 default[:spiff][:url] = 'https://github.com/cloudfoundry-incubator/spiff/releases/download/v1.0/spiff_linux_amd64.zip'
 default[:spiff][:version] = '1.0'
-
 
 default[:ci_infrastructure_cf][:hosts]
 default[:rbenv][:user_installs] = [{ user: 'jenkins'}]

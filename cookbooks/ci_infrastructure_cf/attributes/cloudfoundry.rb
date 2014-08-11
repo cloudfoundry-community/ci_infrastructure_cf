@@ -36,7 +36,7 @@ default[:ci_infrastructure_cf][:jobs][:cloudfoundry].tap do |j|
       'cf-dynamic' => {
         cloud_properties: {
           net_id: microbosh.address.subnet_id,
-          range: '10.0.0.0/8'
+          range: bosh.spiff_stub.meta.networks.manual.range,
         }
       }
     },

@@ -1,8 +1,5 @@
 node.include_attribute 'ci_infrastructure_cf::microbosh'
 
-job_name = 'Microbosh'
-conf = node[:ci_infrastructure_cf][:jobs][job_name.downcase]
-
 %w{libmysqlclient-dev libpq-dev}.each do |pkg|
   package pkg
 end
@@ -19,7 +16,7 @@ execute "chown-rbenv-dir" do
   command "chown -R jenkins:jenkins /var/lib/jenkins/.rbenv"
 end
 
-jenkins_ci_job(job_name)
+jenkins_ci_job('Microbosh')
 
 settings_dir = '/var/lib/jenkins/.microbosh'
 directory(settings_dir) do

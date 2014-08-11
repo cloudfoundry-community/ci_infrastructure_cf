@@ -1,3 +1,4 @@
+include_recipe 'jenkins::master'
 include_recipe 'ci_infrastructure_cf::dependencies'
 include_recipe 'ci_infrastructure_cf::create_credentials'
 include_recipe 'ci_infrastructure_cf::microbosh'

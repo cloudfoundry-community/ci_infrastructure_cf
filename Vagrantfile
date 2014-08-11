@@ -5,54 +5,32 @@
 require 'rubygems'
 require 'dotenv'
 Dotenv.load
+VM_MEMORY = ENV.fetch("VM_MEMORY", 2*1024).to_i
+VM_CORES = ENV.fetch("VM_CORES", 4).to_i
 
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.ssh.private_key_path = "vagrant.pem"
-
-  config.vm.box = "dummy"
-  config.vm.box_url = 'https://github.com/cloudbau/vagrant-openstack-plugin/raw/master/dummy.box'
+  config.vm.box = "hashicorp/precise64"
 
   config.berkshelf.enabled = true
   config.omnibus.chef_version = :latest
-  config.vm.provider :openstack do |os|
-    os.server_name = "Jenkins CI Infrastructure For CF"
-    os.username     =ENV['OS_USERNAME']
-    os.api_key      =ENV['OS_PASSWORD']
-    os.flavor       =ENV['OS_FLAVOR']
-    os.image        =ENV['OS_IMAGE']
-    os.endpoint     =ENV['OS_AUTH_URL']
-    os.keypair_name = ENV['OS_KEYPAIR_NAME']
-    os.ssh_username = "ubuntu"           # login for the VM
 
-    # os.metadata  = {"key" => "value"}                      # optional
-    # os.user_data = "#cloud-config\nmanage_etc_hosts: True" # optional
-    # os.network            = "internal"            # optional
-    os.networks           = [ "#{ENV['OS_NETWORK']}" ]     # optional, overrides os.network
-    # os.address_id         = "YOUR ADDRESS ID"# optional (`network` above has higher precedence)
-    # os.scheduler_hints    = {
-    # :cell => 'australia'
-    # }                                          # optional
-    # os.availability_zone  = "az0001"           # optional
-    os.security_groups    = [ 'ssh', 'jenkins' ]    # optional
-    os.tenant             = ENV['TENANT']
-    os.floating_ip        = ENV['JENKINS_FLOATING_IP']
+  config.vm.network :private_network, ip: '192.168.50.5'
+
+  config.vm.provider :virtualbox do |v, override|
+    v.customize ["modifyvm", :id, "--memory", VM_MEMORY]
+    v.customize ["modifyvm", :id, "--cpus", VM_CORES]
+    v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
   end
 
-  config.omnibus.chef_version = :latest
-  config.berkshelf.enabled = true
-
   config.vm.provision :chef_solo do |chef|
+    chef.cookbooks_path = "cookbooks"
     chef.json = {
-      jenkins: {
-        master: {
-          install_method: 'package'
-        }
-      },
       ci_infrastructure_cf: {
         jobs:{
-          microbosh: {
+          microbosh:{
             provider:{
             name: 'openstack',
             user: ENV['OS_USERNAME'],
@@ -63,6 +41,35 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             address:{
               ip: ENV['MICROBOSH_IP'],
               subnet_id: ENV['MICROBOSH_SUBNET_ID']
+            }
+          },
+          bosh:{
+            spiff_stub:{
+              meta:{
+                networks:{
+                  manual:{
+                    range: ENV['BOSH_RANGE']
+                  }
+                }
+              }
+            }
+          },
+          cloudfoundry:{
+            spiff_stub:{
+              meta:{ 
+                floating_static_ips: ENV['CF_FLOATING_STATIC_IPS']
+              },
+              networks:{
+                cf1:{
+                  subnets:{
+                    default_unused:{
+                      gateway: ENV['CF_GATEWAY'],
+                      reserved: ENV['CF_RESERVED_RANGE'], #['1.1.1.1 - 2.2.2.2','3.3.3.3 - 4.4.4.4']
+                      static: ENV['CF_STATIC_RANGE'], #['5.5.5.5 - 6.6.6.6']
+                    }
+                  }
+                }
+              }
             }
           }
         },
