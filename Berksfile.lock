@@ -11,6 +11,8 @@ DEPENDENCIES
   replace_placeholder
     path: spec/fixtures/cookbooks/replace_placeholder
   ruby_build
+  sec_group
+    path: spec/fixtures/cookbooks/sec_group
 
 GRAPH
   apt (2.4.0)
@@ -38,6 +40,8 @@ GRAPH
     build-essential (>= 0.0.0)
     yum (~> 3.0)
     yum-epel (>= 0.0.0)
+  sec_group (0.0.0)
+    ci_infrastructure_cf (>= 0.0.0)
   yum (3.2.2)
   yum-epel (0.4.0)
     yum (~> 3.0)

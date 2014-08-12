@@ -7,6 +7,7 @@ meta:
     name: bosh-openstack-kvm-ubuntu-lucid
     version: latest
   environment: cf
+director_uuid: DELETE_ME
 jobs:
   ha_proxy_z1:
     properties:
@@ -125,22 +126,11 @@ jobs:
 
 networks:
   floating:
+    type: vip
     cloud_properties:
       net_id:
-      type: vip
   cf1:
     subnets:
-      default_unused:
-        range:
-        gateway:
-        reserved: []
-        static: []
-        cloud_properties:
-          net_id:
-          security_groups:
-          - cf-public
-          - cf-private
-          - ssh
   cf-dynamic:
     cloud_properties:
       net_id:

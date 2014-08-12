@@ -13,6 +13,7 @@ group :development, :test  do
   gem 'rspec'
   gem 'rspec-core'
   gem 'pry'
+  gem 'coveralls', require: false
 end
 
-gem 'coveralls', require: false
+gem 'cyoi'

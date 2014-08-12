@@ -106,7 +106,8 @@ class Chef
 
         # Deep merge of spiff_stub provided via vagrantfile with default spiff_stub
         file "/var/lib/jenkins/stubs/#{job_conf.name}.stub.yml" do
-          content stub_content
+          #TODO: Test gsub
+          content stub_content.gsub(' ! ', ' ')
         end
 
         jenkins_job job_conf.name.capitalize do

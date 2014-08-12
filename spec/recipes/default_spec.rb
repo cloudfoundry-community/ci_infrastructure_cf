@@ -7,7 +7,7 @@ describe 'ci_infrastructure_cf::default' do
     end.converge(described_recipe)
   end
 
-  %w{microbosh bosh dependencies hostsfile create_credentials}.each do |recipe|
+  %w{microbosh bosh cloudfoundry dependencies hostsfile create_credentials}.each do |recipe|
     it "includes #{recipe}" do
       expect(chef_run).to include_recipe( "ci_infrastructure_cf::#{recipe}")
     end

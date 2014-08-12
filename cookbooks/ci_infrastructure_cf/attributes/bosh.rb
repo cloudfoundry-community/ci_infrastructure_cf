@@ -25,6 +25,7 @@ default[:ci_infrastructure_cf][:jobs][:bosh].tap do |j|
           net_id: microbosh.address.subnet_id
         },
         manual:{
+          static: ['1.1.1.1 - 2.2.2.2'],
           range: 'BOSH_RANGE'
         }
       }

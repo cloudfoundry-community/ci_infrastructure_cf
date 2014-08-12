@@ -27,6 +27,7 @@ GEM
     buff-ruby_engine (0.1.0)
     buff-shell_out (0.1.1)
       buff-ruby_engine (~> 0.1.0)
+    builder (3.2.2)
     celluloid (0.16.0.pre2)
       timers (~> 3.0.0)
     celluloid-io (0.16.0.pre2)
@@ -66,6 +67,10 @@ GEM
       simplecov (>= 0.7)
       term-ansicolor
       thor
+    cyoi (0.10.1)
+      fog
+      highline (~> 1.6)
+      readwritesettings (~> 3.0)
     deep_merge (1.0.1)
     dep-selector-libgecode (1.0.2)
     dep_selector (1.0.3)
@@ -77,19 +82,46 @@ GEM
       dotenv-deployment (~> 0.0.2)
     dotenv-deployment (0.0.2)
     erubis (2.7.0)
+    excon (0.39.4)
     faraday (0.9.0)
       multipart-post (>= 1.2, < 3)
     fauxhai (2.2.0)
       net-ssh
       ohai
     ffi (1.9.3)
+    fog (1.23.0)
+      fog-brightbox
+      fog-core (~> 1.23)
+      fog-json
+      fog-softlayer
+      ipaddress (~> 0.5)
+      nokogiri (~> 1.5, >= 1.5.11)
+    fog-brightbox (0.2.0)
+      fog-core (~> 1.22)
+      fog-json
+      inflecto
+    fog-core (1.23.0)
+      builder
+      excon (~> 0.38)
+      formatador (~> 0.2)
+      mime-types
+      net-scp (~> 1.1)
+      net-ssh (>= 2.1.3)
+    fog-json (1.0.0)
+      multi_json (~> 1.0)
+    fog-softlayer (0.3.13)
+      fog-core
+      fog-json
+    formatador (0.2.5)
     hashie (2.1.2)
     highline (1.6.21)
     hitimes (1.2.2)
+    inflecto (0.0.2)
     ipaddress (0.8.0)
     json (1.8.1)
     method_source (0.8.2)
     mime-types (1.25.1)
+    mini_portile (0.6.0)
     minitar (0.5.4)
     mixlib-authentication (1.3.0)
       mixlib-log
@@ -100,6 +132,8 @@ GEM
     multi_json (1.10.1)
     multipart-post (2.0.0)
     net-http-persistent (2.9.4)
+    net-scp (1.2.1)
+      net-ssh (>= 2.6.5)
     net-ssh (2.9.1)
     net-ssh-gateway (1.2.0)
       net-ssh (>= 2.6.5)
@@ -107,6 +141,8 @@ GEM
       net-ssh (>= 2.6.5)
       net-ssh-gateway (>= 1.2.0)
     nio4r (1.0.0)
+    nokogiri (1.6.3.1)
+      mini_portile (= 0.6.0)
     octokit (2.7.2)
       sawyer (~> 0.5.2)
     ohai (7.0.4)
@@ -126,6 +162,7 @@ GEM
     rake (10.3.2)
     rdoc (4.1.1)
       json (~> 1.4)
+    readwritesettings (3.0.1)
     rest-client (1.6.8)
       mime-types (~> 1.16)
       rdoc (>= 2.4.2)
@@ -192,6 +229,7 @@ DEPENDENCIES
   bundler
   chefspec (~> 4.0.1)
   coveralls
+  cyoi
   deep_merge
   dotenv
   pry
