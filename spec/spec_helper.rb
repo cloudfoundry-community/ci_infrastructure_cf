@@ -3,6 +3,7 @@ Coveralls.wear!
 
 require 'rspec'
 require 'chefspec'
+require 'byebug'
 require 'chefspec/berkshelf'
 # require 'berkshelf'
 

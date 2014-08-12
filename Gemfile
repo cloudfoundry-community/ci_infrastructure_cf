@@ -4,11 +4,13 @@ source 'https://rubygems.org'
 # gem 'faraday','~>0.9.0'
 gem 'dotenv'
 gem 'deep_merge'
+gem 'cyoi'
 
 group :development, :test  do
   gem 'berkshelf', '~>3.0.0'
   gem 'chefspec', '~>4.0.1'
   gem 'rake'
+  gem 'byebug'
   gem 'bundler'
   gem 'rspec'
   gem 'rspec-core'
@@ -16,4 +18,3 @@ group :development, :test  do
   gem 'coveralls', require: false
 end
 
-gem 'cyoi'

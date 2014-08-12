@@ -1,0 +1,9 @@
+---
+provider:
+  name: openstack
+  credentials:
+    openstack_username: admin
+    openstack_api_key: admin
+    openstack_tenant: dev
+    openstack_auth_url: 'https://example.com:5000/v2.0/tokens'
+    openstack_region: ''

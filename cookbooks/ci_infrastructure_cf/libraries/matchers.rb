@@ -12,4 +12,11 @@ if defined?(ChefSpec)
       :create,
       resource_name)
   end
+
+  def create_sec_group(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(
+      :sec_group,
+      :create,
+      resource_name)
+  end
 end

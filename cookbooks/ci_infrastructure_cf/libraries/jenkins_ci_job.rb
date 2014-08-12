@@ -1,4 +1,5 @@
 require_relative 'job_conf'
+
 begin
   gem 'deep_merge'
 rescue LoadError
