@@ -37,13 +37,17 @@ describe 'ci_infrastructure_cf::cloudfoundry' do
         },
         networks:{
           cf1:{
-            subnets: {
-            default_unused: {
+            subnets: [{
+              name: 'default_unused',
+              range: '10.0.0.0/8',
               gateway: '1.1.1.1',
               reserved: ['1.1.1.1 - 2.2.2.2'],
-              static: ['2.2.2.2 - 3.3.3.3']
-            }
-            }
+              static: ['2.2.2.2 - 3.3.3.3'],
+              cloud_properties:{
+                net_id: 'MICROBOSH_SUBNET_ID',
+                security_groups: [ 'cf-public', 'cf-private', 'ssh']
+              }}
+            ]
           }
         },
         jobs:{

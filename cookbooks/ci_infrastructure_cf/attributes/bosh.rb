@@ -30,7 +30,7 @@ default[:ci_infrastructure_cf][:jobs][:bosh].tap do |j|
         }
       }
     }
-  }, {merge_hash_arrays: true })
+  })
 
   j[:build_cmd]=  """
     rbenv local 1.9.3-p194
