@@ -63,9 +63,11 @@ class Chef
                      end
       ::YAML.load(file_content)
     end
+
     def stub_content
-       job_conf.spiff_stub.to_hash.deep_merge(default_stub).to_yaml
+       default_stub.deep_merge(job_conf.spiff_stub.to_hash).to_yaml
     end
+
     action(:create) do
       converge_by("Create #{new_resource}") do
         template job_file_path do

@@ -1,7 +1,9 @@
+
 node.include_attribute 'ci_infrastructure_cf::microbosh'
 
 microbosh = JobConf.new('microbosh', node)
 bosh      = JobConf.new('bosh', node)
+
 
 default[:ci_infrastructure_cf][:jobs][:bosh].tap do |j|
   j[:scm]= [
