@@ -19,7 +19,7 @@ module CiInfrastructureCf
     end
 
     def settings_file
-        '~/.microbosh/settings.yml'
+        '/var/lib/jenkins/.microbosh/settings.yml'
     end
   end
 end

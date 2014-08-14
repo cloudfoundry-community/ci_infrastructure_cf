@@ -25,6 +25,25 @@ describe 'ci_infrastructure_cf::cloudfoundry' do
   let(:job_attrs){{}}
 
 
+  describe 'when creates sec_groups' do
+    it 'creates cf-private udp permissions' do
+      expect(chef_run).to create_sec_group('cf-private-udp').with(
+        sg_name: 'cf-private',
+        protocol: 'udp',
+        ports: [68, 3456]
+      )
+    end
+
+    it 'creates cf-private udp permissions' do
+      expect(chef_run).to create_sec_group('cf-private-tcp').with(
+        sg_name: 'cf-private',
+        protocol: 'tcp',
+        ports: (1..65535).to_a
+      )
+    end
+    it 'creates cf-public tcp'
+    it 'creates cf-public udp'
+  end
   it 'creates cloudfoundry jenkins ci job' do
     expect(chef_run).to create_jenkins_ci_job('CloudFoundry')
   end

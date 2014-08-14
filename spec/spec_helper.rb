@@ -1,10 +1,8 @@
-require 'coveralls'
-Coveralls.wear!
 
 require 'rspec'
 require 'chefspec'
-require 'byebug'
 require 'chefspec/berkshelf'
+require_relative '../cookbooks/ci_infrastructure_cf/libraries/helpers'
 # require 'berkshelf'
 
 # Berkshelf.ui.mute do
