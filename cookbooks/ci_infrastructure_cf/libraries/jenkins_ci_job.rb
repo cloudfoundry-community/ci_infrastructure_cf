@@ -1,11 +1,6 @@
 require_relative 'job_conf'
 
-begin
-  gem 'deep_merge'
-rescue LoadError
-  system("gem install --no-rdoc --no-ri deep_merge")
-  Gem.clear_paths
-end
+install_chef_gem 'deep_merge'
 require 'deep_merge'
 
 class Chef

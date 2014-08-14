@@ -1,5 +1,4 @@
 require_relative '../../cookbooks/ci_infrastructure_cf/libraries/provider'
-require 'byebug'
 
 describe CiInfrastructureCf::Provider do
   let(:settings){ YAML.load_file(settings_file).to_hash }

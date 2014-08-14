@@ -1,3 +1,4 @@
+install_chef_gem 'cyoi'
 require 'cyoi/providers'
 require 'cyoi/providers/clients/openstack_provider_client'
 require 'readwritesettings'
