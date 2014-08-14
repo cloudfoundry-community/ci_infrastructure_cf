@@ -13,6 +13,8 @@ DEPENDENCIES
   ruby_build
   sec_group
     path: spec/fixtures/cookbooks/sec_group
+  stemcell
+    path: spec/fixtures/cookbooks/stemcell
 
 GRAPH
   apt (2.4.0)
@@ -41,6 +43,8 @@ GRAPH
     yum (~> 3.0)
     yum-epel (>= 0.0.0)
   sec_group (0.0.0)
+    ci_infrastructure_cf (>= 0.0.0)
+  stemcell (0.0.0)
     ci_infrastructure_cf (>= 0.0.0)
   yum (3.2.2)
   yum-epel (0.4.0)

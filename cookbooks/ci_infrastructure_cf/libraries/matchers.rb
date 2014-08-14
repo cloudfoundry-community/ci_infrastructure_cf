@@ -19,4 +19,11 @@ if defined?(ChefSpec)
       :create,
       resource_name)
   end
+
+  def download_stemcell(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(
+      :stemcell,
+      :download,
+      resource_name)
+  end
 end
