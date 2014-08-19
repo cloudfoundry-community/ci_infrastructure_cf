@@ -60,7 +60,14 @@ class Chef
     end
 
     def stub_content
-       default_stub.deep_merge(job_conf.spiff_stub.to_hash).to_yaml
+      sc = default_stub.deep_merge(job_conf.spiff_stub.to_hash)
+      if sc.has_key?('networks')
+      networks = sc.delete('networks')
+      new_networks = networks.collect{ |k,v| v.merge('name' => k)}
+      # binding.pry
+      sc.merge!('networks' => new_networks)
+      end
+      sc.to_yaml
     end
 
     action(:create) do
