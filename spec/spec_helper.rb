@@ -1,15 +1,11 @@
 
+require 'coveralls'
+Coveralls.wear!
+
 require 'rspec'
 require 'chefspec'
 require 'chefspec/berkshelf'
 require_relative '../cookbooks/ci_infrastructure_cf/libraries/helpers'
-# require 'berkshelf'
-
-# Berkshelf.ui.mute do
-  # ENV['BERKSHELF_PATH'] = 'vendor'
-  # Berkshelf::Berksfile.from_file('Berksfile').install
-# end
-
 require 'chefspec/cacher'
 require 'pry'
 
