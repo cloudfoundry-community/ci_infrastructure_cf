@@ -7,10 +7,10 @@ module CiInfrastructureCf
     end
 
     def download
-      system("wget --timeout=10 -q #{url}")
+      system("wget --timeout=10 -q #{url} -P /var/lib/jenkins/stemcells")
     end
-    private
 
+    private
     def url
       if os != 'centos'
         "https://s3.amazonaws.com/bosh-jenkins-artifacts/bosh-stemcell/#{cloud}/bosh-stemcell-#{version}-#{cloud}-#{virtualization_type}-#{os}-#{os_version}-go_agent.tgz"

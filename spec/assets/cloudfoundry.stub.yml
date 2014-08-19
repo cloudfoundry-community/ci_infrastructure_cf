@@ -7,7 +7,7 @@ meta:
   - 1.2.3.4
   openstack:
   stemcell:
-    name: bosh-openstack-kvm-ubuntu-lucid
+    name: bosh-openstack-kvm-ubuntu-lucid-go_agent
     version: latest
   environment: cf
 jobs:

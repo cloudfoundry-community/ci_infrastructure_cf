@@ -31,7 +31,7 @@ describe CiInfrastructureCf::StemcellManager do
 
       it 'downloads stemcell' do
         expect(stemcell).to receive(:system)
-          .with("wget --timeout=10 -q #{expected_url}")
+          .with("wget --timeout=10 -q #{expected_url} -P /var/lib/jenkins/stemcells")
         stemcell.download
       end
     end

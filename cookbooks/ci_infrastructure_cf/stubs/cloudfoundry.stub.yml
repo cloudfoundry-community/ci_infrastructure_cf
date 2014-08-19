@@ -4,7 +4,7 @@ meta:
   openstack: null
   floating_static_ips:
   stemcell:
-    name: bosh-openstack-kvm-ubuntu-lucid
+    name: bosh-openstack-kvm-ubuntu-lucid-go_agent
     version: latest
   environment: cf
 director_uuid: DELETE_ME
