@@ -1,4 +1,5 @@
-# CI_INFRASTRUCTURE_CF
+CI_INFRASTRUCTURE_CF
+====================
 [![Build Status](https://travis-ci.org/cloudfoundry-community/ci_infrastructure_cf.svg)](https://travis-ci.org/cloudfoundry-community/ci_infrastructure_cf)
 [![Code Climate](https://codeclimate.com/github/cloudfoundry-community/ci_infrastructure_cf.png)](https://codeclimate.com/github/cloudfoundry-community/ci_infrastructure_cf)
 [![Coverage Status](https://coveralls.io/repos/cloudfoundry-community/ci_infrastructure_cf/badge.png)](https://coveralls.io/r/cloudfoundry-community/ci_infrastructure_cf)
@@ -14,3 +15,25 @@ Do Not use this project, its on continuous development and not yet release.
 ## Installation
 
 ## Usage
+
+## Goals
+
+### Technologies
+### Plataform support
+
+## Local pre deployment setup
+
+###On linux
+###On osx
+
+## Cloud pre deployment setup
+
+###On openstack
+
+##Adding custom jobs.
+
+##Configuriguration
+
+##Deploying
+
+##TODO
