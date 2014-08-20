@@ -12,10 +12,6 @@ This provides Jenkins with a set of jobs that lets you set up a complete cf infr
 
 Do Not use this project, its on continuous development and not yet release.
 
-## Installation
-
-## Usage
-
 ## Goals
 
 ### Technologies
