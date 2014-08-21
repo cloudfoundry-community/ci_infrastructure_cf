@@ -5,31 +5,159 @@ CI_INFRASTRUCTURE_CF
 [![Coverage Status](https://coveralls.io/repos/cloudfoundry-community/ci_infrastructure_cf/badge.png)](https://coveralls.io/r/cloudfoundry-community/ci_infrastructure_cf)
 [![Dependency Status](https://gemnasium.com/cloudfoundry-community/ci_infrastructure_cf.svg)](https://gemnasium.com/cloudfoundry-community/ci_infrastructure_cf)
 
-This provides Jenkins with a set of jobs that lets you set up a complete cf infrastructure on openstack.
-
-**WARNING**
-=========== 
-
-Do Not use this project, its on continuous development and not yet release.
+Provisions a jenkins machine on the cloud with a set of pre configured jobs that deploy Microbosh, Bosh and Cloudfoundry on demand.
 
 ## Goals
 
+* Provide automation for Bosh releses deployments (Including CloudFoundry and Bosh itself out of the box).
+* Reuse as much configuration as possible between deployments. (eg: net_ids, network_ranges, etc)
+* Configure a complex infrastructure in a sigle place to be reproduce in different environments.
+* Automated updates and maintenance of deployments.
+
 ### Technologies
+
+* Chef
+* Vagrant
+
 ### Plataform support
+
+* Openstack
 
 ## Local pre deployment setup
 
-###On linux
-###On osx
+###On Linux(Ubuntu 14.04)
+Install dependencies:
+
+```bash
+  $ sudo apt-get update
+  $ sudo apt-get install linux-headers-$(uname -r)
+  $ sudo apt-get install git
+  $ sudo apt-get install vagrant
+  wget https://dl.bintray.com/mitchellh/vagrant/vagrant_1.6.3_x86_64.deb
+  sudo dpkg -i vagrant_1.6.3_x86_64.deb
+  sudo apt-get install virtualbox
+  # ONLY FOR 12.04 =============
+  sudo apt-get install python-software-properties 
+  sudo add-apt-repository cloud-archive:icehouse
+  sudo apt-get update
+  sudo apt-get dist-upgrade
+  # =============
+  $ sudo apt-get install python-novaclient  #pending to test
+  $ wget https://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/12.04/x86_64/chefdk_0.2.0-2_amd64.deb
+  $ sudo dpkg -i chefdk_0.2.0-2_amd64.deb
+```
+
+
+###On OSX
+Install dependencies:
+
+```
+TODO
+```
+
+###On Both:
+
+Configure nova client:
+```bash
+  $ export OS_USERNAME=user
+  $ export OS_PASSWORD=password
+  $ export OS_TENANT_NAME=tenant
+  $ export OS_AUTH_URL=https://example.keystone.com:5000/v2.0
+  $ export OS_FLAVOR=m1.large
+  $ export OS_IMAGE=ubuntu-14.04
+  $ export OS_KEYPAIR_NAME=vagrant_west
+  $ export OS_NETWORK=internal
+  $ export JENKINS_FLOATING_IP=
+  $ export MICROBOSH_SUBNET_ID=
+  $ export MICROBOSH_IP=
+```
+
+Install Vagrant plugins:
+
+```
+  $ vagrant plugin install vagrant-berkshelf
+  $ vagrant plugin install vagrant-openstack-plugin
+  $ vagrant plugin install vagrant-omnibus
+```
 
 ## Cloud pre deployment setup
 
 ###On openstack
+1 - Create 2 networks
+  - internal(CF traffic)
+  - external(CF >> Internet traffic)
+2 - Create keypair for vagrant
 
-##Adding custom jobs.
+```
+  $ nova keypair-add vagrant > ~/.ssh/vagrant.pem
+```
 
-##Configuriguration
+3 -Provision fixed ip for CF using the nova client:
 
-##Deploying
+```
+  $ TODO
+```
 
-##TODO
+##Attributes
+
+`node[:ci_infrastructure_cf][:jobs]` contains hashes were the keys are the jobname and the values are theirs configurations.
+
+###For Microbosh:
+
+See complete list of attributes at attributes/microbosh.rb.
+
+Required:
+`node[:ci_infrastructure_cf][:jobs][:microbosh][:provider][:name]` can be openstack|aws|vsphere. Default: `openstack`.
+`node[:ci_infrastructure_cf][:jobs][:microbosh][:provider][:user]` provider username. Default: `admin`.
+`node[:ci_infrastructure_cf][:jobs][:microbosh][:provider][:pass]` provider password. Default: `admin`.
+`node[:ci_infrastructure_cf][:jobs][:microbosh][:provider][:tenant]` provider tenant. Default: `dev`.
+`node[:ci_infrastructure_cf][:jobs][:microbosh][:provider][:auth_url]` keystone url. Default: `https://example.com:5000/v2.0/tokens`.
+`node[:ci_infrastructure_cf][:jobs][:microbosh][:provider][:subnet_id]` Internal subnet id. Default: `SUBNET_ID`.
+
+###For Bosh:
+
+See complete list of attributes at attributes/bosh.rb.
+
+Required:
+`node[:ci_infrastructure_cf][:bosh][:spiff_stub][:meta][:networks][:manual][:static]` static network ip range. Sample: `['1.1.1.1 - 2.2.2.2']`
+`node[:ci_infrastructure_cf][:bosh][:spiff_stub][:meta][:networks][:manual][:range]` complete network range (Internal). Sample: `1.1.1.0/24`
+
+###For CloudFoundry:
+See complete list of attributes at attributes/cloudfoundry.rb.
+Required:
+
+`node[:spiff_stub][:networks][:floating][:cloud_properties][:net_id]` External net id for floating network. Default: microbosh subnet id.
+`node[:spiff_stub][:meta][:floating_static_ips]` Array with floating static ips available. Sample: `['2.2.2.2']`
+      spiff_stub: { meta: { floating_static_ips: [ '10.231.1.133' ],
+```ruby
+node[:spiff_stub][:networks][:cf1][:subnets]= [ 
+  {
+    name: 'default_unused',
+    gateway: 'GATEWAY_IP',              # Sample: 1.1.1.1
+    range: 'GATEWAY_RANGE',             # Sample: 1.1.1.1/24
+    reserved: RESERVED_IP_RANGE_ARRAY,  # Sample: ['1.1.1.2 - 1.1.1.20'],
+    static: STATIC_IP_RANGE_ARRAY,      # Sample: ['1.1.1.21 - 1.1.1.120'],
+    cloud_properties:{
+      net_id: MICROBOSH_SUBNET_ID,      # Sample: 2a88d7d9-bda5-47ef-ab04-2a3465fae123
+      security_groups: ['cf-public', 'cf-private', 'ssh']
+      
+    }
+  }
+]
+```
+
+###For Custom jobs:
+
+TODO
+
+##Usage
+
+TODO
+After following the pre deployment setup we need to bring the source code of the project to our workstation:
+
+```
+  git clone https://github.com/cloudfoundry-community/ci_infrastructure_cf.git
+  cd ci_infrastructure_cf/
+```
+
+
