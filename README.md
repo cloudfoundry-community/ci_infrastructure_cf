@@ -126,7 +126,8 @@ See complete list of attributes at attributes/bosh.rb.
 
 ###For CloudFoundry:
 See complete list of attributes at attributes/cloudfoundry.rb.
-Required:
+
+####Required:
 
 - `node[:spiff_stub][:networks][:floating][:cloud_properties][:net_id]` External net id for floating network. Default: microbosh subnet id.
 - `node[:spiff_stub][:meta][:floating_static_ips]` Array with floating static ips available. Sample: `['2.2.2.2']`
