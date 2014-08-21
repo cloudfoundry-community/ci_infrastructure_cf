@@ -9,10 +9,10 @@ Provisions a jenkins machine on the cloud with a set of pre configured jobs that
 
 ## Goals
 
-* Provide automation for Bosh releses deployments (Including CloudFoundry and Bosh itself out of the box).
-* Reuse as much configuration as possible between deployments. (eg: net_ids, network_ranges, etc)
-* Configure a complex infrastructure in a sigle place to be reproduce in different environments.
-* Automated updates and maintenance of deployments.
+* Automation for Bosh deployments (Including Bosh and CloudFoundry out of the box).
+* Reuse configurations between deployments. (eg: net_ids, network_ranges, etc)
+* Keep full infrastructure configuration in a sigle place.
+* Automated updates and maintenance for bosh deployments.
 
 ### Technologies
 
@@ -74,7 +74,7 @@ Configure nova client:
 
 Install Vagrant plugins:
 
-```
+```bash
   $ vagrant plugin install vagrant-berkshelf
   $ vagrant plugin install vagrant-openstack-plugin
   $ vagrant plugin install vagrant-omnibus
@@ -83,16 +83,15 @@ Install Vagrant plugins:
 ## Cloud pre deployment setup
 
 ###On openstack
-1 - Create 2 networks
-  - internal(CF traffic)
-  - external(CF >> Internet traffic)
-2 - Create keypair for vagrant
+1.  Create 2 networks
+    - Internal (CF traffic)
+    - External (CF >> Internet traffic)
+2.  Create keypair for vagrant
 
-```
-  $ nova keypair-add vagrant > ~/.ssh/vagrant.pem
-```
-
-3 -Provision fixed ip for CF using the nova client:
+    ```
+      $ nova keypair-add vagrant > ~/.ssh/vagrant.pem
+    ```
+3.  Provision fixed ip for CF using the nova client:
 
 ```
   $ TODO
@@ -100,35 +99,39 @@ Install Vagrant plugins:
 
 ##Attributes
 
-`node[:ci_infrastructure_cf][:jobs]` contains hashes were the keys are the jobname and the values are theirs configurations.
+- `node[:ci_infrastructure_cf][:jobs]` contains hashes were the keys are the jobname and the values are theirs configurations.
 
 ###For Microbosh:
 
 See complete list of attributes at attributes/microbosh.rb.
 
-Required:
-`node[:ci_infrastructure_cf][:jobs][:microbosh][:provider][:name]` can be openstack|aws|vsphere. Default: `openstack`.
-`node[:ci_infrastructure_cf][:jobs][:microbosh][:provider][:user]` provider username. Default: `admin`.
-`node[:ci_infrastructure_cf][:jobs][:microbosh][:provider][:pass]` provider password. Default: `admin`.
-`node[:ci_infrastructure_cf][:jobs][:microbosh][:provider][:tenant]` provider tenant. Default: `dev`.
-`node[:ci_infrastructure_cf][:jobs][:microbosh][:provider][:auth_url]` keystone url. Default: `https://example.com:5000/v2.0/tokens`.
-`node[:ci_infrastructure_cf][:jobs][:microbosh][:provider][:subnet_id]` Internal subnet id. Default: `SUBNET_ID`.
+####Required:
+
+- `node[:ci_infrastructure_cf][:jobs][:microbosh][:provider][:name]` can be openstack|aws|vsphere. Default: `openstack`.
+- `node[:ci_infrastructure_cf][:jobs][:microbosh][:provider][:user]` provider username. Default: `admin`.
+- `node[:ci_infrastructure_cf][:jobs][:microbosh][:provider][:pass]` provider password. Default: `admin`.
+- `node[:ci_infrastructure_cf][:jobs][:microbosh][:provider][:tenant]` provider tenant. Default: `dev`.
+
+- `node[:ci_infrastructure_cf][:jobs][:microbosh][:provider][:auth_url]` keystone url. Default: `https://example.com:5000/v2.0/tokens`.
+- `node[:ci_infrastructure_cf][:jobs][:microbosh][:provider][:subnet_id]` Internal subnet id. Default: `SUBNET_ID`.
 
 ###For Bosh:
 
 See complete list of attributes at attributes/bosh.rb.
 
-Required:
-`node[:ci_infrastructure_cf][:bosh][:spiff_stub][:meta][:networks][:manual][:static]` static network ip range. Sample: `['1.1.1.1 - 2.2.2.2']`
-`node[:ci_infrastructure_cf][:bosh][:spiff_stub][:meta][:networks][:manual][:range]` complete network range (Internal). Sample: `1.1.1.0/24`
+####Required:
+
+- `node[:ci_infrastructure_cf][:bosh][:spiff_stub][:meta][:networks][:manual][:static]` static network ip range. Sample: `['1.1.1.1 - 2.2.2.2']`
+- `node[:ci_infrastructure_cf][:bosh][:spiff_stub][:meta][:networks][:manual][:range]` complete network range (Internal). Sample: `1.1.1.0/24`
 
 ###For CloudFoundry:
 See complete list of attributes at attributes/cloudfoundry.rb.
 Required:
 
-`node[:spiff_stub][:networks][:floating][:cloud_properties][:net_id]` External net id for floating network. Default: microbosh subnet id.
-`node[:spiff_stub][:meta][:floating_static_ips]` Array with floating static ips available. Sample: `['2.2.2.2']`
-      spiff_stub: { meta: { floating_static_ips: [ '10.231.1.133' ],
+- `node[:spiff_stub][:networks][:floating][:cloud_properties][:net_id]` External net id for floating network. Default: microbosh subnet id.
+- `node[:spiff_stub][:meta][:floating_static_ips]` Array with floating static ips available. Sample: `['2.2.2.2']`
+
+- 
 ```ruby
 node[:spiff_stub][:networks][:cf1][:subnets]= [ 
   {
@@ -152,8 +155,7 @@ TODO
 
 ##Usage
 
-TODO
-After following the pre deployment setup we need to bring the source code of the project to our workstation:
+Clone Repo:
 
 ```
   git clone https://github.com/cloudfoundry-community/ci_infrastructure_cf.git
