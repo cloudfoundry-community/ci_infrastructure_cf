@@ -91,11 +91,19 @@ Install Vagrant plugins:
     ```
       $ nova keypair-add vagrant > ~/.ssh/vagrant.pem
     ```
+3.  Create Jenkins and SSH sec-groups
+    
+    ```
+      $ nova secgroup-create jenkins "Jenkins sec group"
+      $ nova secgroup-add-rule jenkins tcp 8080 8080 0.0.0.0/0
+      $ nova secgroup-create ssh "SSH sec group"
+      $ nova secgroup-add-rule ssh tcp 22 22 0.0.0.0/0
+    ```
 3.  Provision fixed ip for CF using the nova client:
 
-```
-  $ TODO
-```
+    ```
+      $ TODO
+    ```
 
 ##Attributes
 
