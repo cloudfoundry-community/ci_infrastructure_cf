@@ -5,3 +5,4 @@ tmp
 vendor
 coverage
 wmg
+openstack/env_vars
