@@ -16,7 +16,7 @@ Provisions a jenkins machine on the cloud with a set of pre configured jobs that
 
 ## Disclaimer 
 
-This project together with this documents aims to show goals and current state of the tool. We are not yet able to give support for the community and it will be over continue development till we can relese an stable versions.
+This project together with this documents aims to show goals and current state of the tool. We are not yet able to give support to the community and it will be over continue development till we can relese an stable versions.
 We recomend trying it on a development environment.
 
 ### Technologies
@@ -45,13 +45,15 @@ Install dependencies:
   $ sudo add-apt-repository cloud-archive:icehouse
   $ sudo apt-get update
   $ sudo apt-get dist-upgrade
-  $ # =============
+  $ # ============================
   $ sudo apt-get install python-novaclient  #pending to test
   $ wget https://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/12.04/x86_64/chefdk_0.2.0-2_amd64.deb
   $ sudo dpkg -i chefdk_0.2.0-2_amd64.deb
+  $ # Installs Quantum ===========
   $ sudo apt-get install language-pack-en
   $ sudo apt-get install python-quantumclient
   $ echo 'export LC_ALL=en_US.UTF-8' >> ~/.bashrc
+  $ # ============================
 ```
 
 
@@ -122,7 +124,7 @@ Install Vagrant plugins:
 
 ###For Microbosh:
 
-See complete list of attributes at attributes/microbosh.rb.
+See complete list of attributes at [attributes/microbosh.rb](https://github.com/cloudfoundry-community/ci_infrastructure_cf/blob/master/cookbooks/ci_infrastructure_cf/attributes/microbosh.rb).
 
 ####Required:
 
@@ -136,7 +138,7 @@ See complete list of attributes at attributes/microbosh.rb.
 
 ###For Bosh:
 
-See complete list of attributes at attributes/bosh.rb.
+See complete list of attributes at [attributes/bosh.rb](https://github.com/cloudfoundry-community/ci_infrastructure_cf/blob/master/cookbooks/ci_infrastructure_cf/attributes/bosh.rb).
 
 ####Required:
 
@@ -144,7 +146,8 @@ See complete list of attributes at attributes/bosh.rb.
 - `node[:ci_infrastructure_cf][:bosh][:spiff_stub][:meta][:networks][:manual][:range]` complete network range (Internal). Sample: `1.1.1.0/24`
 
 ###For CloudFoundry:
-See complete list of attributes at attributes/cloudfoundry.rb.
+
+See complete list of attributes at [attributes/cloudfoundry.rb](https://github.com/cloudfoundry-community/ci_infrastructure_cf/blob/master/cookbooks/ci_infrastructure_cf/attributes/cloudfoundry.rb).
 
 ####Required:
 
@@ -180,7 +183,7 @@ Clone Repo:
 
 ```
   git clone https://github.com/cloudfoundry-community/ci_infrastructure_cf.git
-  cd ci_infrastructure_cf/
+  cd ci_infrastructure_cf/openstack
 ```
 
 Export environment variables required on the vagrantfile:
@@ -201,10 +204,26 @@ Export environment variables required on the vagrantfile:
   ```
 ####Deploy:
 
+```
+  $ vagrant up --provider=openstack
+```
 
-##### Update configuration on the Vagrantfile
+##### Update configuration on the Vagrantfile.
 ##### Re-Provision VM
+
+```
+  $ vagrant provision
+```
+
 ##### Re-Run tasks manually
+
+Go to http://FIXED_JENKINS_IP:8080 :
+
+![](https://github.com/cloudfoundry-community/ci_infrastructure_cf/blob/master/images/dashboard.png)
+
+Run any task manually:
+
+![](https://github.com/cloudfoundry-community/ci_infrastructure_cf/blob/master/images/microbosh.png)
 
 ## Troubleshooting on openstack
 ### Security groups quota limit exceeded:
