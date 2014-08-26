@@ -14,6 +14,11 @@ Provisions a jenkins machine on the cloud with a set of pre configured jobs that
 * Keep full infrastructure configuration in a sigle place.
 * Automated updates and maintenance for bosh deployments.
 
+## Disclaimer 
+
+This project together with this documents aims to show goals and current state of the tool. We are not yet able to give support for the community and it will be over continue development till we can relese an stable versions.
+We recomend trying it on a development environment.
+
 ### Technologies
 
 * Chef
@@ -32,16 +37,15 @@ Install dependencies:
   $ sudo apt-get update
   $ sudo apt-get install linux-headers-$(uname -r)
   $ sudo apt-get install git
-  $ sudo apt-get install vagrant
-  wget https://dl.bintray.com/mitchellh/vagrant/vagrant_1.6.3_x86_64.deb
-  sudo dpkg -i vagrant_1.6.3_x86_64.deb
-  sudo apt-get install virtualbox
-  # ONLY FOR 12.04 =============
-  sudo apt-get install python-software-properties 
-  sudo add-apt-repository cloud-archive:icehouse
-  sudo apt-get update
-  sudo apt-get dist-upgrade
-  # =============
+  $ wget https://dl.bintray.com/mitchellh/vagrant/vagrant_1.6.3_x86_64.deb
+  $ sudo dpkg -i vagrant_1.6.3_x86_64.deb
+  $ sudo apt-get install virtualbox
+  $ # ONLY FOR 12.04 =============
+  $ sudo apt-get install python-software-properties 
+  $ sudo add-apt-repository cloud-archive:icehouse
+  $ sudo apt-get update
+  $ sudo apt-get dist-upgrade
+  $ # =============
   $ sudo apt-get install python-novaclient  #pending to test
   $ wget https://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/12.04/x86_64/chefdk_0.2.0-2_amd64.deb
   $ sudo dpkg -i chefdk_0.2.0-2_amd64.deb
@@ -63,13 +67,6 @@ Configure nova client:
   $ export OS_PASSWORD=password
   $ export OS_TENANT_NAME=tenant
   $ export OS_AUTH_URL=https://example.keystone.com:5000/v2.0
-  $ export OS_FLAVOR=m1.large
-  $ export OS_IMAGE=ubuntu-14.04
-  $ export OS_KEYPAIR_NAME=vagrant_west
-  $ export OS_NETWORK=internal
-  $ export JENKINS_FLOATING_IP=
-  $ export MICROBOSH_SUBNET_ID=
-  $ export MICROBOSH_IP=
 ```
 
 Install Vagrant plugins:
@@ -99,10 +96,21 @@ Install Vagrant plugins:
       $ nova secgroup-create ssh "SSH sec group"
       $ nova secgroup-add-rule ssh tcp 22 22 0.0.0.0/0
     ```
-3.  Provision fixed ip for CF using the nova client:
+3.  Provision floating IP for Jenkins and for CF:
 
     ```
-      $ TODO
+      $ nova floating-ip-create external #To be used for Jenkins
+      +--------------+-----------+----------+----------+
+      | Ip           | Server Id | Fixed Ip | Pool     |
+      +--------------+-----------+----------+----------+
+      | 1.1.1.2      |           | -        | external |
+      +--------------+-----------+----------+----------+
+      $ nova floating-ip-create external #To be used for CF
+      +--------------+-----------+----------+----------+
+      | Ip           | Server Id | Fixed Ip | Pool     |
+      +--------------+-----------+----------+----------+
+      | 1.1.1.3      |           | -        | external |
+      +--------------+-----------+----------+----------+
     ```
 
 ##Attributes
@@ -166,9 +174,34 @@ TODO
 
 Clone Repo:
 
+
 ```
   git clone https://github.com/cloudfoundry-community/ci_infrastructure_cf.git
   cd ci_infrastructure_cf/
 ```
+
+Export environment variables required on the vagrantfile:
+
+  ```text
+    # env_vars file
+    export OS_USERNAME=admin
+    export OS_PASSWORD=admin
+    export OS_FLAVOR=m1.large
+    export OS_IMAGE=ubuntu-14.04
+    export OS_AUTH_URL=https://keystone.example:5001/v2.0
+    export OS_KEYPAIR_NAME=vagrant
+    export OS_NETWORK=internal
+    export OS_TENANT_NAME=development
+    export JENKINS_FLOATING_IP=1.1.1.2
+    export MICROBOSH_SUBNET_ID=53e020ad-bc34-4126-be44-e0a3e2c04591
+    export MICROBOSH_IP=FIXED_INTERNAL_IP
+  ```
+####Deploy:
+
+
+##### Update configuration on the Vagrantfile
+##### Re-Provision VM
+##### Re-Run tasks manually
+
 
 
