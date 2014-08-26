@@ -49,6 +49,9 @@ Install dependencies:
   $ sudo apt-get install python-novaclient  #pending to test
   $ wget https://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/12.04/x86_64/chefdk_0.2.0-2_amd64.deb
   $ sudo dpkg -i chefdk_0.2.0-2_amd64.deb
+  $ sudo apt-get install language-pack-en
+  $ sudo apt-get install python-quantumclient
+  $ echo 'export LC_ALL=en_US.UTF-8' >> ~/.bashrc
 ```
 
 
@@ -203,5 +206,30 @@ Export environment variables required on the vagrantfile:
 ##### Re-Provision VM
 ##### Re-Run tasks manually
 
+## Troubleshooting on openstack
+### Security groups quota limit exceeded:
 
+if you get the following errror when running any of the tasks:
 
+```json
+  "409-{u'NeutronError': {u'message': u\\\"Quota exceeded for resources: ['security_group']\\\""}}"
+```
+
+You can try by changing the quota limts using admin credentials with the following command:
+
+```bash
+  $ neutron quota-update --tenant-id b5e6943e8280489wb86c4943a6a317ab --security-group 1000 --security-group-rule 100000
+```
+
+### VM creation failed:
+
+message:
+
+```
+ Bosh::Clouds::VMCreationFailed (Bosh::Clouds::VMCreationFailed)
+```
+
+Possible causes:
+
+- IP of one of the vms already taken.
+- Not enough permissions on the openstack user.
