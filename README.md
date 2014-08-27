@@ -9,7 +9,7 @@ Provisions a jenkins machine on the cloud with a set of pre configured jobs that
 
 ## Motivation
 
-As bosh operators we were facing repetitive processes to deploy a full infrastructure in different environments and regions manually. We also were setting the same attributes in different releases realising that our bosh deployment manifests share configurations between them. Another issue we were facing was the lack of standarize deployment procedures between different members of the team.
+As bosh operators we were facing repetitive processes to deploy a full infrastructure in different environments and regions manually. We also were setting the same attributes for different releases realising that our bosh deployment manifests share configurations between them. Another issue we were facing was the lack of an standarize deployment procedures between different members of the team.
 
 ## Goals
 
