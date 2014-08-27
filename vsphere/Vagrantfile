@@ -3,44 +3,45 @@
 
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 require 'rubygems'
-require 'dotenv'
-Dotenv.load
+
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.ssh.private_key_path = "vagrant.pem"
+  config.vm.box = 'dummy'
+  config.vm.box_url = './dummy.box'
+  # config.vm.network 'private_network', ip: '10.5.139.100'
 
-  config.vm.box = "dummy"
-  config.vm.box_url = 'https://github.com/cloudbau/vagrant-openstack-plugin/raw/master/dummy.box'
+  # Follow the following link to create the box
+  # https://docs.vagrantup.com/v2/boxes/base.html
 
-  config.berkshelf.enabled = true
-  config.omnibus.chef_version = :latest
+  config.ssh.username= 'ssh_template_username' #eg: vagrant
+  config.ssh.password= 'ssh_template_password' #eg: vagrant
+  config.ssh.host= 'HOST_IP'
+  config.ssh.insert_key = false
 
 
-  config.vm.provider :openstack do |os|
-    os.server_name = "Jenkins CI Infrastructure For CF"
-    os.username     =ENV['OS_USERNAME']
-    os.api_key      =ENV['OS_PASSWORD']
-    os.flavor       =ENV['OS_FLAVOR']
-    os.image        =ENV['OS_IMAGE']
-    os.endpoint     =ENV['OS_AUTH_URL']
-    os.keypair_name = ENV['OS_KEYPAIR_NAME']
-    os.ssh_username = "ubuntu"           # login for the VM
-
-    # os.metadata  = {"key" => "value"}                      # optional
-    # os.user_data = "#cloud-config\nmanage_etc_hosts: True" # optional
-    # os.network            = "internal"            # optional
-    os.networks           = [ "#{ENV['OS_NETWORK']}" ]     # optional, overrides os.network
-    # os.address_id         = "YOUR ADDRESS ID"# optional (`network` above has higher precedence)
-    # os.scheduler_hints    = {
-    # :cell => 'australia'
-    # }                                          # optional
-    # os.availability_zone  = "az0001"           # optional
-    os.security_groups    = [ 'ssh', 'jenkins' ]    # optional
-    os.tenant             = ENV['TENANT']
-    os.floating_ip        = ENV['JENKINS_FLOATING_IP']
+  config.vm.provider :vsphere do |vsphere|
+    vsphere.name = "Jenkins CI Infrastructure For CF"
+    vsphere.host = ENV['VS_HOST'] 
+    vsphere.insecure = true
+    vsphere.data_center_name = ENV['VS_DATA_CENTER']
+    vsphere.compute_resource_name = ENV['VS_COMPUTE_RESOURCE_NAME']
+    vsphere.resource_pool_name = ENV['VS_RESOURCE_POOL']
+    vsphere.template_name = ENV['VS_TEMPLATE_NAME']
+    vsphere.user = ENV['VS_USERNAME']
+    vsphere.password = ENV['VS_PASSWORD']
   end
 
+  config.berkshelf.enabled = true
+  config.berkshelf.berksfile_path = '../Berksfile'
+  config.omnibus.chef_version = :latest
+
+  $script = <<SCRIPT
+  sudo apt-get update
+  sudo apt-get -y install build-essential 
+SCRIPT
+
+  config.vm.provision "shell", inline: $script
 
   config.vm.provision :chef_solo do |chef|
     chef.json = {
@@ -48,11 +49,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         jobs:{
           microbosh:{
             provider:{
-            name: 'openstack',
-            user: ENV['OS_USERNAME'],
-            pass: ENV['OS_PASSWORD'],
-            tenant: ENV['OS_TENANT'],
-            auth_url: ENV['OS_AUTH_URL'],
+            name: 'vsphere',
+            user: ENV['VS_USERNAME'],
+            pass: ENV['VS_PASSWORD'],
+            auth_url: ENV['HOST']
             },
             address:{
               ip: ENV['MICROBOSH_IP'],
@@ -88,9 +88,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
               }
             }
           }
-        },
-        hosts: {
-          '1.2.3.4' => 'example.com'
         }
       }
     }
@@ -171,7 +168,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # some recipes and/or roles.
   #
   # config.vm.provision :chef_solo do |chef|
-  #   chef.cookbooks_path = "../my-recipes/cookbooks"
   #   chef.roles_path = "../my-recipes/roles"
   #   chef.data_bags_path = "../my-recipes/data_bags"
   #   chef.add_recipe "mysql"
