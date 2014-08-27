@@ -38,26 +38,26 @@ We recomend trying it on a development environment.
 Install dependencies:
 
 ```bash
-  $ sudo apt-get update
-  $ sudo apt-get install linux-headers-$(uname -r)
-  $ sudo apt-get install git
-  $ wget https://dl.bintray.com/mitchellh/vagrant/vagrant_1.6.3_x86_64.deb
-  $ sudo dpkg -i vagrant_1.6.3_x86_64.deb
-  $ sudo apt-get install virtualbox
-  $ # ONLY FOR 12.04 =============
-  $ sudo apt-get install python-software-properties 
-  $ sudo add-apt-repository cloud-archive:icehouse
-  $ sudo apt-get update
-  $ sudo apt-get dist-upgrade
-  $ # ============================
-  $ sudo apt-get install python-novaclient  #pending to test
-  $ wget https://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/12.04/x86_64/chefdk_0.2.0-2_amd64.deb
-  $ sudo dpkg -i chefdk_0.2.0-2_amd64.deb
-  $ # Installs Quantum ===========
-  $ sudo apt-get install language-pack-en
-  $ sudo apt-get install python-quantumclient
-  $ echo 'export LC_ALL=en_US.UTF-8' >> ~/.bashrc
-  $ # ============================
+  sudo apt-get update
+  sudo apt-get install linux-headers-$(uname -r)
+  sudo apt-get install git
+  wget https://dl.bintray.com/mitchellh/vagrant/vagrant_1.6.3_x86_64.deb
+  sudo dpkg -i vagrant_1.6.3_x86_64.deb
+  sudo apt-get install virtualbox
+  # ONLY FOR 12.04 =============
+  sudo apt-get install python-software-properties 
+  sudo add-apt-repository cloud-archive:icehouse
+  sudo apt-get update
+  sudo apt-get dist-upgrade
+  # ============================
+  sudo apt-get install python-novaclient  #pending to test
+  wget https://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/12.04/x86_64/chefdk_0.2.0-2_amd64.deb
+  sudo dpkg -i chefdk_0.2.0-2_amd64.deb
+  # Installs Quantum ===========
+  sudo apt-get install language-pack-en
+  sudo apt-get install python-quantumclient
+  echo 'export LC_ALL=en_US.UTF-8' >> ~/.bashrc
+  # ============================
 ```
 
 
