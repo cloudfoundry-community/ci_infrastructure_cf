@@ -25,6 +25,25 @@ describe 'ci_infrastructure_cf::cloudfoundry' do
   let(:job_attrs){{}}
 
 
+  describe 'when creates sec_groups' do
+    it 'creates cf-private udp permissions' do
+      expect(chef_run).to create_sec_group('cf-private-udp').with(
+        sg_name: 'cf-private',
+        protocol: 'udp',
+        ports: [68, 3456]
+      )
+    end
+
+    it 'creates cf-private udp permissions' do
+      expect(chef_run).to create_sec_group('cf-private-tcp').with(
+        sg_name: 'cf-private',
+        protocol: 'tcp',
+        ports: (1..65535).to_a
+      )
+    end
+    it 'creates cf-public tcp'
+    it 'creates cf-public udp'
+  end
   it 'creates cloudfoundry jenkins ci job' do
     expect(chef_run).to create_jenkins_ci_job('CloudFoundry')
   end
@@ -80,5 +99,45 @@ describe 'ci_infrastructure_cf::cloudfoundry' do
 
       expect(expected).to eq(actual)
     end
+  end
+
+  describe 'when downloading stemcell' do
+      before do
+        allow(File).to receive(:exists?).and_call_original
+        allow(File).to receive(:exists?)
+        .with('/var/lib/jenkins/stubs/cloudfoundry.stub.yml')
+        .and_return(true)
+        allow(File).to receive(:read).and_call_original
+        allow(File).to receive(:read)
+        .with('/var/lib/jenkins/stubs/cloudfoundry.stub.yml')
+        .and_return( """
+---
+meta:
+  stemcell:
+    name: #{name}
+    version: #{version}""")
+      end
+    [{
+      name: 'bosh-openstack-kvm-ubuntu-trusty',
+      version: 'latest'
+    },{
+      name: 'bosh-openstack-kvm-ubuntu-lucid-go_agent',
+      version: 'latest'
+    }].each do |s|
+      describe "when downloading stemcell #{s[:name]} with version #{s[:version]}" do
+        let(:name){ s[:name]}
+        let(:version){ s[:version]}
+
+        it 'downloads stemcell' do
+          expect(chef_run).to download_stemcell('download-stemcell').with(
+            stemcell_version: s[:version],
+            stemcell_name: s[:name]
+          )
+        end
+      end
+    end
+
+
+
   end
 end

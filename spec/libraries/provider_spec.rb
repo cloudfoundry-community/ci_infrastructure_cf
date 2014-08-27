@@ -1,5 +1,4 @@
 require_relative '../../cookbooks/ci_infrastructure_cf/libraries/provider'
-require 'byebug'
 
 describe CiInfrastructureCf::Provider do
   let(:settings){ YAML.load_file(settings_file).to_hash }
@@ -13,9 +12,10 @@ describe CiInfrastructureCf::Provider do
 
       before do
         allow(YAML).to receive(:load_file)
-          .with('~/.microbosh/settings.yml').and_return(settings)
+          .with('/var/lib/jenkins/.microbosh/settings.yml').and_return(settings)
       end
 
+  # * { protocol: "rdp", ports: (3398..3398), ip_ranges: [ { cidrIp: "196.212.12.34/32" } ] }
       it 'creates a sg' do
         expect_any_instance_of(Cyoi::Providers::Clients::OpenStackProviderClient).to receive(:create_security_group)
           .with('ssh','cf seg group for ssh',

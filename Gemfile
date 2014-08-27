@@ -10,7 +10,6 @@ group :development, :test  do
   gem 'berkshelf', '~>3.0.0'
   gem 'chefspec', '~>4.0.1'
   gem 'rake'
-  gem 'byebug'
   gem 'bundler'
   gem 'rspec'
   gem 'rspec-core'

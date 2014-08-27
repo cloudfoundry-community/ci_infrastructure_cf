@@ -3,27 +3,26 @@
 
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 require 'rubygems'
-require 'dotenv'
-Dotenv.load
+
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.ssh.private_key_path = "vagrant.pem"
+  config.ssh.private_key_path = "~/.ssh/vagrant.pem"
 
   config.vm.box = "dummy"
   config.vm.box_url = 'https://github.com/cloudbau/vagrant-openstack-plugin/raw/master/dummy.box'
 
   config.berkshelf.enabled = true
+  config.berkshelf.berksfile_path = '../Berksfile'
   config.omnibus.chef_version = :latest
-
 
   config.vm.provider :openstack do |os|
     os.server_name = "Jenkins CI Infrastructure For CF"
-    os.username     =ENV['OS_USERNAME']
-    os.api_key      =ENV['OS_PASSWORD']
-    os.flavor       =ENV['OS_FLAVOR']
-    os.image        =ENV['OS_IMAGE']
-    os.endpoint     =ENV['OS_AUTH_URL']
+    os.username     = ENV['OS_USERNAME']
+    os.api_key      = ENV['OS_PASSWORD']
+    os.flavor       = ENV['OS_FLAVOR']
+    os.image        = ENV['OS_IMAGE']
+    os.endpoint     = "#{ENV['OS_AUTH_URL'].strip}/tokens"
     os.keypair_name = ENV['OS_KEYPAIR_NAME']
     os.ssh_username = "ubuntu"           # login for the VM
 
@@ -37,10 +36,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # }                                          # optional
     # os.availability_zone  = "az0001"           # optional
     os.security_groups    = [ 'ssh', 'jenkins' ]    # optional
-    os.tenant             = ENV['TENANT']
+    os.tenant             = ENV['OS_TENANT_NAME']
     os.floating_ip        = ENV['JENKINS_FLOATING_IP']
   end
 
+  $script = <<SCRIPT
+  sudo apt-get update
+  sudo apt-get -y install build-essential 
+SCRIPT
+
+  config.vm.provision "shell", inline: $script
 
   config.vm.provision :chef_solo do |chef|
     chef.json = {
@@ -51,8 +56,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             name: 'openstack',
             user: ENV['OS_USERNAME'],
             pass: ENV['OS_PASSWORD'],
-            tenant: ENV['OS_TENANT'],
-            auth_url: ENV['OS_AUTH_URL'],
+            tenant: ENV['OS_TENANT_NAME'],
+            auth_url: "#{ENV['OS_AUTH_URL'].strip}/tokens"
             },
             address:{
               ip: ENV['MICROBOSH_IP'],
@@ -88,9 +93,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
               }
             }
           }
-        },
-        hosts: {
-          '1.2.3.4' => 'example.com'
         }
       }
     }
@@ -171,7 +173,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # some recipes and/or roles.
   #
   # config.vm.provision :chef_solo do |chef|
-  #   chef.cookbooks_path = "../my-recipes/cookbooks"
   #   chef.roles_path = "../my-recipes/roles"
   #   chef.data_bags_path = "../my-recipes/data_bags"
   #   chef.add_recipe "mysql"

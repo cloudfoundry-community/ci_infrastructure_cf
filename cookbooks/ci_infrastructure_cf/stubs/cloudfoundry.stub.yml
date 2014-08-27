@@ -4,7 +4,7 @@ meta:
   openstack: null
   floating_static_ips:
   stemcell:
-    name: bosh-openstack-kvm-ubuntu-lucid
+    name: bosh-openstack-kvm-ubuntu-lucid-go_agent
     version: latest
   environment: cf
 director_uuid: DELETE_ME
@@ -129,8 +129,7 @@ networks:
     type: vip
     cloud_properties:
       net_id:
-  cf1:
-    subnets:
+  cf1: {}
   cf-dynamic:
     cloud_properties:
       net_id:
@@ -138,8 +137,8 @@ networks:
       - cf-public
       - cf-private
       - ssh
-      range:
-      type: dynamic
+    range:
+    type: dynamic
   cf2:
     type: manual
     subnets:
@@ -148,7 +147,7 @@ networks:
         gateway: 10.0.0.1
         reserved: []
         static:
-        - 10.0.0.1 - 10.0.0.250
+        - 10.0.0.2 - 10.0.0.250
         cloud_properties:
           net_id: MICROBOSH_SUBNET_ID
           security_groups:

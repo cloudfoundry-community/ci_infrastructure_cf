@@ -83,11 +83,14 @@ execute 'unzip-spiff' do
   action :nothing
 end
 
-directory "/var/lib/jenkins/stubs" do
-  owner "jenkins"
-  group "jenkins"
-  mode 00755
-  action :create
+
+%w{ stubs stemcells }.each do |folder|
+  directory "/var/lib/jenkins/#{folder}" do
+    owner "jenkins"
+    group "jenkins"
+    mode 00755
+    action :create
+  end
 end
 
 %w{ templates bin }.each do |folder|

@@ -1,11 +1,6 @@
 require_relative 'job_conf'
 
-begin
-  gem 'deep_merge'
-rescue LoadError
-  system("gem install --no-rdoc --no-ri deep_merge")
-  Gem.clear_paths
-end
+install_chef_gem 'deep_merge'
 require 'deep_merge'
 
 class Chef
@@ -65,7 +60,14 @@ class Chef
     end
 
     def stub_content
-       default_stub.deep_merge(job_conf.spiff_stub.to_hash).to_yaml
+      sc = default_stub.deep_merge(job_conf.spiff_stub.to_hash)
+      if sc.has_key?('networks')
+      networks = sc.delete('networks')
+      new_networks = networks.collect{ |k,v| v.merge('name' => k)}
+      # binding.pry
+      sc.merge!('networks' => new_networks)
+      end
+      sc.to_yaml
     end
 
     action(:create) do
