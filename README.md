@@ -7,11 +7,15 @@ CI_INFRASTRUCTURE_CF
 
 Provisions a jenkins machine on the cloud with a set of pre configured jobs that deploy Microbosh, Bosh and Cloudfoundry on demand.
 
+## Motivation
+
+As bosh operators we were facing repetitive processes to deploy a full infrastructure in different environments and regions manually. We also were setting the same attributes in different releases realising that our bosh deployment manifests share configurations between them. Another issue we were facing was the lack of standarize deployment procedures between different members of the team.
+
 ## Goals
 
 * Automation for Bosh deployments (Including Bosh and CloudFoundry out of the box).
 * Reuse configurations between deployments. (eg: net_ids, network_ranges, etc)
-* Keep full infrastructure configuration in a sigle place.
+* Keep full infrastructure configuration in a sigle place. (Provision via Vagrantfile)
 * Automated updates and maintenance for bosh deployments.
 
 ## Disclaimer 
