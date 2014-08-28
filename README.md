@@ -9,19 +9,18 @@ Provisions a jenkins machine on the cloud with a set of pre configured jobs that
 
 ## Motivation
 
-As bosh operators we were facing repetitive processes to deploy a full infrastructure in different environments and regions manually. We also were setting the same attributes for different releases realising that our bosh deployment manifests share configurations between them. Another issue we were facing was the lack of an standarize deployment procedures between different members of the team.
+As BOSH operators, we were facing repetitive manual processes to deploy our infrastructure in different environments and regions. We were also setting the same attributes for different releases realizing that our BOSH deployment manifests at common configurations. Another issue we were facing was the lack of standardized deployment procedures between different members on the team.
 
 ## Goals
 
-* Automation for Bosh deployments (Including Bosh and CloudFoundry out of the box).
-* Reuse configurations between deployments. (eg: net_ids, network_ranges, etc)
-* Keep full infrastructure configuration in a sigle place. (Provision via Vagrantfile)
-* Automated updates and maintenance for bosh deployments.
+* Automation for BOSH deployments (including BOSH and Cloud Foundry out of the box)
+* Reuse configurations between deployments (eg: net_ids, network_ranges, etc)
+* Keep full infrastructure configuration in a single place (provision via Vagrantfile)
+* Automated updates and maintenance for BOSH deployments
 
 ## Disclaimer 
 
-This project together with this documents aims to show goals and current state of the tool. We are not yet able to give support to the community and it will be over continue development till we can relese an stable versions.
-We recomend trying it on a development environment.
+This project together with this documents aims to show the goals and current state of the tool. The tool will require additional development before we can release a stable version; however, we recommend trying it on a development environment. We are unable to give support to the community at this time but hope to do so in the near future.
 
 ### Technologies
 
