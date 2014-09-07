@@ -1,4 +1,5 @@
-require_relative 'provider'
+install_chef_gem 'bosh-deployer'
+require 'bosh-deployer'
 
 class Chef
   class Resource::Stemcell < Resource::LWRPBase
@@ -38,9 +39,10 @@ class Chef
     end
 
     def stemcell_manager
-      CiInfrastructureCf::StemcellManager.new(
+      Bosh::Deployer::Stemcell.new(
         @new_resource.stemcell_name,
-        @new_resource.stemcell_version
+        @new_resource.stemcell_version,
+	'/var/jenkins/stemcells/'
       )
     end
 
