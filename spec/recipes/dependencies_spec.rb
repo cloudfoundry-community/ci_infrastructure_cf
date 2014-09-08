@@ -198,4 +198,10 @@ describe 'ci_infrastructure_cf::dependencies' do
       )
     end
   end
+
+  %w{bosh-deployer}.each do |gem|
+    it "installs #{gem}" do
+      expect(chef_run).to install_rbenv_gem(gem)
+    end
+  end
 end

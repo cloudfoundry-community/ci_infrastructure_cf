@@ -41,8 +41,7 @@ default[:ci_infrastructure_cf][:jobs][:bosh].tap do |j|
     bosh -n upload release $(pwd)/release/releases/bosh-93.yml --skip-if-exists
     ~/templates/bosh/generate_manifest ~/stubs/bosh.stub.yml
     ~/bin/set_director_uuid deployment.yml
-    ~/bin/upload_stemcell
-
+    bosh deployer provision stemcells
     bosh deployment deployment.yml
     bosh -n deploy
  """
