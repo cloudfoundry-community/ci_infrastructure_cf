@@ -38,8 +38,7 @@ default[:ci_infrastructure_cf][:jobs][:cloudfoundry].tap do |j|
     bosh -n upload release $(pwd)/releases/cf-175.yml --skip-if-exists
     ./generate_deployment_manifest openstack ~/stubs/cloudfoundry.stub.yml > deployment.yml
     ~/bin/set_director_uuid deployment.yml
-    bosh -n upload stemcell ~/stemcells/bosh-stemcell-latest-openstack-kvm-ubuntu-lucid-go_agent.tgz --skip-if-exists
-
+    bosh deployer provision stemcells
     bosh deployment deployment.yml
     bosh -n deploy
  """

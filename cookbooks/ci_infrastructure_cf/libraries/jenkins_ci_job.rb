@@ -1,5 +1,4 @@
 require_relative 'job_conf'
-
 install_chef_gem 'deep_merge'
 require 'deep_merge'
 

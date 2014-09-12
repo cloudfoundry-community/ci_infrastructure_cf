@@ -1,5 +1,5 @@
 require 'spec_helper'
-require_relative '../../cookbooks/ci_infrastructure_cf/libraries/stemcell_manager'
+require_relative '../../cookbooks/ci_infrastructure_cf/libraries/stemcell'
 
 describe 'stemcell::download' do
   let(:stemcell_name) { 'bosh-openstack-kvm-ubuntu-lucid'}
@@ -12,11 +12,12 @@ describe 'stemcell::download' do
     end.converge(described_recipe)
   end
 
-  let(:stemcell_manager){ double.as_null_object }
+  let(:stemcell){ double.as_null_object }
 
   before do
-    allow(CiInfrastructureCf::StemcellManager).to receive(:new).with(
-       stemcell_name, stemcell_version).and_return(stemcell_manager)
+    allow(Bosh::Deployer::Stemcell).to receive(:new).with(
+       stemcell_name, stemcell_version, '/var/jenkins/stemcells/')
+       .and_return(stemcell)
   end
 
   it 'creates sec group' do
@@ -27,7 +28,7 @@ describe 'stemcell::download' do
   end
 
   it 'creates the security group' do
-    expect(stemcell_manager).to receive(:download)
+    expect(stemcell).to receive(:download)
     chef_run
   end
 end
