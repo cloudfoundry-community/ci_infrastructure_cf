@@ -1,3 +1,11 @@
+PATH
+  remote: ~/workspace/bosh-deployer
+  specs:
+    bosh-deployer (0.0.2)
+      readwritesettings
+      redcard
+      thor (~> 0.18)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -19,9 +27,6 @@ GEM
       thor (~> 0.18)
     berkshelf-api-client (1.2.0)
       faraday (~> 0.9.0)
-    bosh-deployer (0.0.1)
-      redcard
-      thor (~> 0.18)
     buff-config (0.4.0)
       buff-extensions (~> 0.3)
       varia_model (~> 0.1)
@@ -229,7 +234,7 @@ PLATFORMS
 
 DEPENDENCIES
   berkshelf (~> 3.0.0)
-  bosh-deployer
+  bosh-deployer!
   bundler
   chefspec (~> 4.0.1)
   coveralls

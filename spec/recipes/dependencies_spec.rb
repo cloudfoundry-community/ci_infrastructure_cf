@@ -184,7 +184,7 @@ describe 'ci_infrastructure_cf::dependencies' do
     )
   end
 
-  %w{ templates bin }.each do |folder|
+  %w{ templates bin stubs}.each do |folder|
     it "creates and sync #{folder} for bosh releases" do
       expect(chef_run).to create_remote_directory("/var/lib/jenkins/#{folder}").with(
         owner: "jenkins",

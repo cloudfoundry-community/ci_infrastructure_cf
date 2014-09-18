@@ -7,4 +7,4 @@ coverage
 wmg_prod
 wmg_stag
 openstack/env_vars
-cookbook/ci_infrastructure_cf/files/default/vendor
+cookbooks/ci_infrastructure_cf/files/default/stubs
