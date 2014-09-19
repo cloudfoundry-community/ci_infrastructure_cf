@@ -93,7 +93,7 @@ end
   end
 end
 
-%w{ templates bin }.each do |folder|
+%w{ templates bin stubs }.each do |folder|
   remote_directory "/var/lib/jenkins/#{folder}" do
     owner "jenkins"
     group "jenkins"
