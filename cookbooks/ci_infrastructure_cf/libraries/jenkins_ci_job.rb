@@ -108,6 +108,7 @@ class Chef
           end
         end
 
+        # generate_stub if File.exists?()
         # Deep merge of spiff_stub provided via vagrantfile with default spiff_stub
         file "/var/lib/jenkins/stubs/#{job_conf.name}.stub.yml" do
           #TODO: Test gsub

@@ -43,17 +43,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
               subnet_id: ENV['MICROBOSH_SUBNET_ID']
             }
           },
-          bosh:{
-            spiff_stub:{
-              meta:{
-                networks:{
-                  manual:{
-                    range: ENV['BOSH_RANGE']
-                  }
-                }
-              }
-            }
-          },
           cloudfoundry:{
             spiff_stub:{
               meta:{ 
