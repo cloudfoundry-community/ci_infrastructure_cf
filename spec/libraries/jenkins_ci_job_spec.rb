@@ -28,10 +28,6 @@ describe 'jenkins_ci_job::create' do
   end
 
 
-  it 'renders default spiff_stub' do
-    expect(chef_run).to render_file('/var/lib/jenkins/stubs/dummy.stub.yml')
-  end
-
   describe 'template creation' do
     it 'creates the template' do
       expect(chef_run).to create_template(job_file_path)

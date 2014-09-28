@@ -42,24 +42,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
               ip: ENV['MICROBOSH_IP'],
               subnet_id: ENV['MICROBOSH_SUBNET_ID']
             }
-          },
-          cloudfoundry:{
-            spiff_stub:{
-              meta:{ 
-                floating_static_ips: ENV['CF_FLOATING_STATIC_IPS']
-              },
-              networks:{
-                cf1:{
-                  subnets:{
-                    default_unused:{
-                      gateway: ENV['CF_GATEWAY'],
-                      reserved: ENV['CF_RESERVED_RANGE'], #['1.1.1.1 - 2.2.2.2','3.3.3.3 - 4.4.4.4']
-                      static: ENV['CF_STATIC_RANGE'], #['5.5.5.5 - 6.6.6.6']
-                    }
-                  }
-                }
-              }
-            }
           }
         },
         hosts: {

@@ -48,27 +48,6 @@ class Chef
       ::File.join(Chef::Config[:file_cache_path], job_conf.filename)
     end
 
-    def default_stub
-      file_path= "#{Chef::Config[:cookbook_path].first}/ci_infrastructure_cf/stubs/#{job_conf.name}.stub.yml"
-      file_content = if ::File.file?(file_path)
-                       ::File.read(file_path)
-                     else
-                       '{}'
-                     end
-      ::YAML.load(file_content)
-    end
-
-    def stub_content
-      sc = default_stub.deep_merge(job_conf.spiff_stub.to_hash)
-      if sc.has_key?('networks')
-      networks = sc.delete('networks')
-      new_networks = networks.collect{ |k,v| v.merge('name' => k)}
-      # binding.pry
-      sc.merge!('networks' => new_networks)
-      end
-      sc.to_yaml
-    end
-
     action(:create) do
       converge_by("Create #{new_resource}") do
         template job_file_path do
@@ -106,13 +85,6 @@ class Chef
             }
             EOH
           end
-        end
-
-        # generate_stub if File.exists?()
-        # Deep merge of spiff_stub provided via vagrantfile with default spiff_stub
-        file "/var/lib/jenkins/stubs/#{job_conf.name}.stub.yml" do
-          #TODO: Test gsub
-          content stub_content.gsub(' ! ', ' ')
         end
 
         jenkins_job job_conf.name.capitalize do

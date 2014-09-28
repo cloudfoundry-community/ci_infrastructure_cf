@@ -17,11 +17,12 @@ describe CiInfrastructureCf::ThorCli do
 
   describe 'edit_stub' do
     %w{ bosh cf }.each do |stub|
-      
+
       it "opens editor with the #{stub} stub" do
         allow(File).to receive(:exist?).and_return(true)
-        expect(cli).to receive('`')
-          .with("vim cookbooks/ci_infrastructure_cf/files/default/stubs2/#{stub}.yml")
+        allow(Process).to receive(:wait).and_return(true)
+        expect(cli).to receive('spawn')
+          .with("vim cookbooks/ci_infrastructure_cf/files/default/stubs/#{stub}.yml")
         cli.edit_stub(stub)
       end
     end

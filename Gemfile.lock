@@ -1,11 +1,3 @@
-PATH
-  remote: ~/workspace/bosh-deployer
-  specs:
-    bosh-deployer (0.0.3)
-      readwritesettings
-      redcard
-      thor (~> 0.18)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -27,6 +19,11 @@ GEM
       thor (~> 0.18)
     berkshelf-api-client (1.2.0)
       faraday (~> 0.9.0)
+    bosh-deployer (0.0.6)
+      cancun
+      readwritesettings
+      redcard
+      thor (~> 0.18)
     buff-config (0.4.0)
       buff-extensions (~> 0.3)
       varia_model (~> 0.1)
@@ -36,6 +33,10 @@ GEM
     buff-shell_out (0.2.0)
       buff-ruby_engine (~> 0.1.0)
     builder (3.2.2)
+    cancun (0.2.2)
+      highline
+      highline-color
+      sourcify
     celluloid (0.16.0.pre3)
       timers (~> 4.0.0)
     celluloid-io (0.16.0.pre2)
@@ -96,6 +97,8 @@ GEM
     ffi-yajl (1.0.2)
       ffi (~> 1.5)
       libyajl2 (~> 1.0)
+    file-tail (1.1.0)
+      tins (~> 1.0)
     fog (1.23.0)
       fog-brightbox
       fog-core (~> 1.23)
@@ -122,6 +125,7 @@ GEM
     formatador (0.2.5)
     hashie (2.1.2)
     highline (1.6.21)
+    highline-color (0.0.5)
     hitimes (1.2.2)
     inflecto (0.0.2)
     ipaddress (0.8.0)
@@ -204,10 +208,16 @@ GEM
     rspec-mocks (3.0.3)
       rspec-support (~> 3.0.0)
     rspec-support (3.0.3)
+    ruby2ruby (2.1.3)
+      ruby_parser (~> 3.1)
+      sexp_processor (~> 4.0)
+    ruby_parser (3.6.3)
+      sexp_processor (~> 4.1)
     sawyer (0.5.4)
       addressable (~> 2.3.5)
       faraday (~> 0.8, < 0.10)
     semverse (1.2.1)
+    sexp_processor (4.4.4)
     simplecov (0.9.0)
       docile (~> 1.1.0)
       multi_json
@@ -217,6 +227,11 @@ GEM
     solve (1.2.1)
       dep_selector (~> 1.0)
       semverse (~> 1.1)
+    sourcify (0.5.0)
+      file-tail (>= 1.0.5)
+      ruby2ruby (>= 1.2.5)
+      ruby_parser (>= 2.0.5)
+      sexp_processor (>= 3.0.5)
     systemu (2.6.4)
     term-ansicolor (1.3.0)
       tins (~> 1.0)
@@ -234,7 +249,7 @@ PLATFORMS
 
 DEPENDENCIES
   berkshelf (~> 3.0.0)
-  bosh-deployer!
+  bosh-deployer
   bundler
   chefspec (~> 4.0.1)
   coveralls

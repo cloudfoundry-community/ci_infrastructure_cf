@@ -2,8 +2,8 @@ source 'https://rubygems.org'
 
 # gem 'solve','~>0.5.0'
 # gem 'faraday','~>0.9.0'
-# gem 'bosh-deployer'
-gem 'bosh-deployer', path: '~/workspace/bosh-deployer'
+gem 'bosh-deployer'
+# gem 'bosh-deployer', path: '~/workspace/bosh-deployer'
 gem 'deep_merge'
 gem 'cyoi'
 
