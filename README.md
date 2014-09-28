@@ -139,46 +139,6 @@ See complete list of attributes at [attributes/microbosh.rb](https://github.com/
 - `node[:ci_infrastructure_cf][:jobs][:microbosh][:provider][:auth_url]` keystone url. Default: `https://example.com:5000/v2.0/tokens`.
 - `node[:ci_infrastructure_cf][:jobs][:microbosh][:provider][:subnet_id]` Internal subnet id. Default: `SUBNET_ID`.
 
-###For Bosh:
-
-See complete list of attributes at [attributes/bosh.rb](https://github.com/cloudfoundry-community/ci_infrastructure_cf/blob/master/cookbooks/ci_infrastructure_cf/attributes/bosh.rb).
-
-####Required:
-
-- `node[:ci_infrastructure_cf][:bosh][:spiff_stub][:meta][:networks][:manual][:static]` static network ip range. Sample: `['1.1.1.1 - 2.2.2.2']`
-- `node[:ci_infrastructure_cf][:bosh][:spiff_stub][:meta][:networks][:manual][:range]` complete network range (Internal). Sample: `1.1.1.0/24`
-
-###For CloudFoundry:
-
-See complete list of attributes at [attributes/cloudfoundry.rb](https://github.com/cloudfoundry-community/ci_infrastructure_cf/blob/master/cookbooks/ci_infrastructure_cf/attributes/cloudfoundry.rb).
-
-####Required:
-
-- `node[:spiff_stub][:networks][:floating][:cloud_properties][:net_id]` External net id for floating network. Default: microbosh subnet id.
-- `node[:spiff_stub][:meta][:floating_static_ips]` Array with floating static ips available. Sample: `['2.2.2.2']`
-
-- 
-```ruby
-node[:spiff_stub][:networks][:cf1][:subnets]= [ 
-  {
-    name: 'default_unused',
-    gateway: 'GATEWAY_IP',              # Sample: 1.1.1.1
-    range: 'GATEWAY_RANGE',             # Sample: 1.1.1.1/24
-    reserved: RESERVED_IP_RANGE_ARRAY,  # Sample: ['1.1.1.2 - 1.1.1.20'],
-    static: STATIC_IP_RANGE_ARRAY,      # Sample: ['1.1.1.21 - 1.1.1.120'],
-    cloud_properties:{
-      net_id: MICROBOSH_SUBNET_ID,      # Sample: 2a88d7d9-bda5-47ef-ab04-2a3465fae123
-      security_groups: ['cf-public', 'cf-private', 'ssh']
-      
-    }
-  }
-]
-```
-
-###For Custom jobs:
-
-TODO
-
 ##Usage
 
 Clone Repo:
@@ -227,6 +187,30 @@ Go to http://FIXED_JENKINS_IP:8080 :
 Run any task manually:
 
 ![](https://github.com/cloudfoundry-community/ci_infrastructure_cf/blob/master/images/microbosh.png)
+
+##Command Line tool
+
+On the bin folder you will find a command line application. It will let you generate initial stubs for CF and Bosh. It will also let you edit your configuration prior to provision of the jenkins machine.
+
+###CF|Bosh initial setup and customizations.
+
+A wizard will let you generate intial configurations for bosh or cf:
+
+```
+  $ ./bin/cic generate_stub <cf|bosh>
+```
+
+You can also edit the generated file with:
+
+```
+  $ ./bin/cic edit_stub  <cf|bosh>
+```
+
+Now you can reprovision this configuration on the Jenkins machine so that they can take effect:
+```
+  $ ./bin/cic provision
+```
+
 
 ## Troubleshooting on openstack
 ### Security groups quota limit exceeded:
