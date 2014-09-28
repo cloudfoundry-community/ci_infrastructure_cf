@@ -8,7 +8,6 @@ module CiInfrastructureCf
     def generate_stub(name)
       cmd = Bosh::Deployer::Cli::Commands::GenerateStub.new(
         name, default_path )
-
         cmd.perform
     end
 
@@ -16,16 +15,25 @@ module CiInfrastructureCf
     def edit_stub(name)
       filepath = "#{default_path}/#{name}.yml"
       if File.exist?(filepath)
-        pid = spawn("vim #{filepath}")
-        Process.wait(pid)
+        spawn_and_wait("vim #{filepath}")
       else
         puts 'stub not found' 
       end
     end
 
+    desc "provision", "Provision jenkins machine for cf ci"
+    def provision
+      spawn_and_wait("vagrant provision")
+    end
+
     protected
     def default_path
-      'cookbooks/ci_infrastructure_cf/files/default/stubs'
+      File.expand_path( "../cookbooks/ci_infrastructure_cf/files/default/stubs", __FILE__)
+    end
+
+    def spawn_and_wait(cmd)
+      pid = spawn(cmd)
+      Process.wait(pid)
     end
   end
 end
