@@ -8,3 +8,4 @@ wmg_prod
 wmg_stag
 openstack/env_vars
 cookbooks/ci_infrastructure_cf/files/default/stubs
+*.swp

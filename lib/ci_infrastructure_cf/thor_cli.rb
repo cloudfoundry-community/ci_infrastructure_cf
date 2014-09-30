@@ -28,7 +28,7 @@ module CiInfrastructureCf
 
     protected
     def default_path
-      File.expand_path( "../cookbooks/ci_infrastructure_cf/files/default/stubs", __FILE__)
+      File.expand_path( "../../../cookbooks/ci_infrastructure_cf/files/default/stubs", __FILE__)
     end
 
     def spawn_and_wait(cmd)
