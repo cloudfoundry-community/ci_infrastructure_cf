@@ -146,7 +146,8 @@ Clone Repo:
 
 ```
   git clone https://github.com/cloudfoundry-community/ci_infrastructure_cf.git
-  cd ci_infrastructure_cf/openstack
+  cd ci_infrastructure_cf
+  bundle install
 ```
 
 Export environment variables required on the vagrantfile:
@@ -175,7 +176,7 @@ Export environment variables required on the vagrantfile:
 ##### Re-Provision VM
 
 ```
-  $ vagrant provision
+  $ cic provision
 ```
 
 ##### Re-Run tasks manually
@@ -197,18 +198,18 @@ On the bin folder you will find a command line application. It will let you gene
 A wizard will let you generate intial configurations for bosh or cf:
 
 ```
-  $ ./bin/cic generate_stub <cf|bosh>
+  $ cic generate_stub <cf|bosh>
 ```
 
 You can also edit the generated file with:
 
 ```
-  $ ./bin/cic edit_stub  <cf|bosh>
+  $ cic edit_stub  <cf|bosh>
 ```
 
 Now you can reprovision this configuration on the Jenkins machine so that they can take effect:
 ```
-  $ ./bin/cic provision
+  $ cic provision
 ```
 
 
