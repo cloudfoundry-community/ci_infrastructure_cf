@@ -19,7 +19,7 @@ GEM
       thor (~> 0.18)
     berkshelf-api-client (1.2.0)
       faraday (~> 0.9.0)
-    bosh-deployer (0.1.0)
+    bosh-deployer (0.1.1)
       cancun
       readwritesettings
       recursive-open-struct
@@ -69,7 +69,7 @@ GEM
       chef (~> 11.12)
       fauxhai (~> 2.0)
       rspec (~> 3.0)
-    ci_infrastructure_cf_cli (0.0.2)
+    ci_infrastructure_cf_cli (0.0.3)
       bosh-deployer
       thor
     coderay (1.1.0)
@@ -79,7 +79,7 @@ GEM
       simplecov (>= 0.7)
       term-ansicolor
       thor
-    cyoi (0.10.1)
+    cyoi (0.11.0)
       fog
       highline (~> 1.6)
       readwritesettings (~> 3.0)
@@ -123,7 +123,7 @@ GEM
       net-ssh (>= 2.1.3)
     fog-json (1.0.0)
       multi_json (~> 1.0)
-    fog-softlayer (0.3.18)
+    fog-softlayer (0.3.19)
       fog-core
       fog-json
     formatador (0.2.5)
