@@ -6,6 +6,7 @@ gem 'bosh-deployer'
  #gem 'bosh-deployer', path: '~/workspace/bosh-deployer'
 gem 'deep_merge'
 gem 'cyoi'
+gem 'ci_infrastructure_cf_cli'
 
 group :development, :test  do
   gem 'berkshelf', '~>3.0.0'
