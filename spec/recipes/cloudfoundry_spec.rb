@@ -5,20 +5,6 @@ describe 'ci_infrastructure_cf::cloudfoundry' do
   let(:chef_run) do
     ChefSpec::Runner.new(step_into: ['jenkins_ci_job']) do |n|
       n.set['ci_infrastructure_cf'][ 'jobs']['cloudfoundry']= job_attrs
-      n.set['ci_infrastructure_cf'][ 'jobs']['bosh']=
-      {spiff_stub: {
-        meta: {
-          networks: {
-            manual: {
-              range: '10.0.0.0/8'
-            }
-          }
-        }
-      }}
-      n.set['ci_infrastructure_cf'][ 'jobs']['microbosh']=
-      {address: {
-        subnet_id: 'MICROBOSH_SUBNET_ID'
-      }}
     end.converge(described_recipe)
   end
 

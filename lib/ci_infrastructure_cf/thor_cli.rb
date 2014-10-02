@@ -26,7 +26,9 @@ module CiInfrastructureCf
       spawn_and_wait("vagrant provision")
     end
 
-    protected
+    #desc 'edit_jobs'
+    #desc 'provision_jenkins'
+
     def default_path
       File.expand_path( "../../../cookbooks/ci_infrastructure_cf/files/default/stubs", __FILE__)
     end

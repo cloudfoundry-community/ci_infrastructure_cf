@@ -9,34 +9,13 @@ default[:ci_infrastructure_cf][:jobs][:cloudfoundry].tap do |j|
   j[:scm]= [
       { url: 'https://github.com/cloudfoundry/cf-release.git' }
   ]
-  j[:spiff_stub]=
-    cloudfoundry.spiff_stub.to_hash.deep_merge( {
-    meta:{
-      'bosh-network'=>{
-        cidr: bosh.spiff_stub.meta.networks.manual.range
-      }
-    },
-    networks:
-      {floating:{
-          cloud_properties: {
-            net_id: microbosh.address.subnet_id,
-          }
-        },
-        'cf-dynamic' => {
-          cloud_properties: {
-            net_id: microbosh.address.subnet_id,
-          },
-          range: bosh.spiff_stub.meta.networks.manual.range
-      }
-    },
-  })
   j[:build_cmd]=  """
     rbenv local 1.9.3-p194
     git checkout v175
-    bosh -n target #{bosh.spiff_stub.meta.networks.manual.static.first.split('-').first.strip}
+    bosh deployer target bosh ~/stubs/bosh.yml
     bosh login admin admin
     bosh -n upload release $(pwd)/releases/cf-175.yml --skip-if-exists
-    ./generate_deployment_manifest openstack ~/stubs/cloudfoundry.stub.yml > deployment.yml
+    ./generate_deployment_manifest openstack ~/stubs/cloudfoundry.yml > deployment.yml
     ~/bin/set_director_uuid deployment.yml
     bosh deployer provision stemcells
     bosh deployment deployment.yml

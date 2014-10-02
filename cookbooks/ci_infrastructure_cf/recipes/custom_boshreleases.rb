@@ -7,15 +7,11 @@ sec_group 'cf-private-udp' do
   action :create
 end
 
-sec_group 'cf-private-tcp' do
-  sg_name 'cf-private'
-  protocol 'tcp'
-  ports (1..65535).to_a
-  action :create
-end
 
-jenkins_ci_job 'CloudFoundry' do
-  action :create
+node[:ci_infrastructure_cf][:jobs].each do |job_name, atts|
+  jenkins_ci_job job_name do
+    action :create
+ end unless %w{ cloudfoundry microbosh bosh }.include? job_name
 end
 
 
